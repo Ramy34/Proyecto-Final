@@ -50,6 +50,7 @@ float	movX = 0.0f,
 unsigned int	t_unam,
 				t_mesa,
 				t_patas,
+				t_pizarron,
 				t_texture;
 
 //Ciclos de mesas
@@ -112,6 +113,7 @@ void LoadTextures()
 	t_unam = generateTextures("Texturas/escudo_unam.jpg", 0);
 	t_patas = generateTextures("Texturas/patas.png", 1);
 	t_mesa = generateTextures("Texturas/mesa.png", 1);
+	t_pizarron = generateTextures("Texturas/Pizarron.png", 1);
 	t_texture = generateTextures("Texturas/awesomeface.png", 1);
 	
 
@@ -129,6 +131,9 @@ void LoadTextures()
 	glBindTexture(GL_TEXTURE_2D, t_mesa);
 
 	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, t_pizarron);
+
+	glActiveTexture(GL_TEXTURE5);
 	glBindTexture(GL_TEXTURE_2D, t_texture);
 	
 }
@@ -137,6 +142,7 @@ void LoadTextures()
 void myData()
 {
 	float vertices[] = {
+		//Cubo para texturas únicas
 		// positions          // normals           // texture coords
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  //Cara Trasera 0
 		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,
@@ -167,6 +173,38 @@ void myData()
 		 0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
 		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,
+		
+		//Cubo para el pizarron
+		-0.5f, -0.5f, -0.5f,  0.5f,  0.5f,  //Cara Trasera 24
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.5f,
+		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,  0.5f,  0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f,  1.0f,  //Cara Frontal 28
+		 0.5f, -0.5f,  0.5f,  1.0f,  1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f,  0.5f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.5f,
+
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.5f, //Cara Izquierda 32
+		-0.5f,  0.5f, -0.5f,  0.5f,  0.5f,
+		-0.5f, -0.5f, -0.5f,  0.5f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
+
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.5f,  //Cara Derecha 36
+		 0.5f,  0.5f, -0.5f,  0.5f,  0.5f,
+		 0.5f, -0.5f, -0.5f,  0.5f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.5f,  //Cara Inferior 40
+		 0.5f, -0.5f, -0.5f,  0.5f,  0.5f,
+		 0.5f, -0.5f,  0.5f,  0.5f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.5f,  //Cara Superior 44
+		 0.5f,  0.5f, -0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,  0.5f,  0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,
+
 
 	};
 
@@ -187,7 +225,7 @@ void myData()
 		17, 18, 19,
 
 		20, 21, 23,
-		21, 22, 23
+		21, 22, 23,
 	};
 
 	glGenVertexArrays(1, &VAO);
@@ -406,12 +444,12 @@ void display2(Shader projectionShader) {
 
 	//Pizarrón
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(-5.0f, 4.0f, -20.0f));
+	tmp = model = glm::translate(model, glm::vec3(-5.0f, 4.0f, -20.0f));
 	model = glm::scale(model, glm::vec3(40.0f, 6.0f, 0.25f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_unam);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	projectionShader.setInt("texture1", t_pizarron);
+	glDrawArrays(GL_QUADS, 24, 24);	
 
 	glBindVertexArray(0);
 }
@@ -473,9 +511,9 @@ int main()
 	// glfw: initialize and configure
 	// ------------------------------
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
 
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
