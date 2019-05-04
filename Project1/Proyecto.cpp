@@ -19,7 +19,7 @@ GLFWmonitor *monitors;
 GLuint VBO, VAO, EBO;
 
 //Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 15.0f));
 double	lastX = 0.0f,
 		lastY = 0.0f;
 bool firstMouse = true;
@@ -336,6 +336,8 @@ void display2(Shader projectionShader) {
 	projectionShader.setMat4("projection", projection);
 
 	glBindVertexArray(VAO);
+	//Dibujo del salón de cómputo
+	/*
 	//Dibujo de la mesa
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(10.0f, 0.375f, -2.5f));
@@ -449,8 +451,35 @@ void display2(Shader projectionShader) {
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pizarron);
-	glDrawArrays(GL_QUADS, 24, 24);	
+	glDrawArrays(GL_QUADS, 24, 24);	*/
 
+	tmp = model = glm::mat4(1.0f);
+	model = glm::scale(model, glm::vec3(12.0f, 4.0f, 12.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_unam);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(12.0f, 4.0f, 12.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_mesa);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(12.0f, 4.0f, 12.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_patas);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(12.0f, 4.0f, 12.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_pizarron);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 //Termina la parte del dibujado de primitivas ------------------------------------------------------------------------------------------------------
@@ -578,8 +607,7 @@ int main()
 		glClearColor(0.0f, 0.95f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//display(modelShader, ourModel, llantasModel);
-		display(modelShader, ourModel, llantasModel, pisoModel);
+		//display(modelShader, ourModel, llantasModel, pisoModel);
 		display2(projectionShader);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
