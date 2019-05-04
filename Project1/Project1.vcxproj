@@ -21,6 +21,18 @@
   <ItemGroup>
     <ClCompile Include="Proyecto.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\modelLoading.fs" />
+    <None Include="shaders\modelLoading.vs" />
+    <None Include="shaders\shader_texture_color.fs" />
+    <None Include="shaders\shader_texture_color.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="esfera.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{B9C3A967-FE3F-4F5B-B05B-389E9CF3B6FE}</ProjectGuid>

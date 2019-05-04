@@ -19,4 +19,32 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\modelLoading.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\modelLoading.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\shader_texture_color.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\shader_texture_color.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="camera.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="esfera.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

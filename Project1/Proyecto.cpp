@@ -10,7 +10,7 @@ void my_input(GLFWwindow *window);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
-// settings
+// settings-----------------------------------------------------------------------------------------------------------------------------------------
 // Window size
 int SCR_WIDTH = 3800;
 int SCR_HEIGHT = 7600;
@@ -58,8 +58,21 @@ int i, j;
 //For model
 bool animacion = false;
 float movKit_z = 0.0f;
+//--------------------------------------------------------------------------------------------------------------------------------------------------
 
+void getResolution()
+{
+	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
+	SCR_WIDTH = mode->width;
+	SCR_HEIGHT = (mode->height) - 80;
+
+	lastX = SCR_WIDTH / 2.0f;
+	lastY = SCR_HEIGHT / 2.0f;
+
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------
 unsigned int generateTextures(const char* filename, bool alfa)
 {
 	unsigned int textureID;
@@ -94,18 +107,6 @@ unsigned int generateTextures(const char* filename, bool alfa)
 	stbi_image_free(data);
 }
 
-void getResolution()
-{
-	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-	SCR_WIDTH = mode->width;
-	SCR_HEIGHT = (mode->height) - 80;
-
-	lastX = SCR_WIDTH / 2.0f;
-	lastY = SCR_HEIGHT / 2.0f;
-
-}
-
 void LoadTextures()
 {
 	t_unam = generateTextures("Texturas/escudo_unam.jpg", 0);
@@ -131,6 +132,7 @@ void LoadTextures()
 	glBindTexture(GL_TEXTURE_2D, t_texture);
 	
 }
+//Termina la parte de las texturas -----------------------------------------------------------------------------------------------------------------
 
 void myData()
 {
@@ -207,6 +209,7 @@ void myData()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 }
+//Termina la definición de los vertices ------------------------------------------------------------------------------------------------------------
 
 void animate(void)
 {
@@ -217,6 +220,63 @@ void animate(void)
 			animacion = false;
 	}
 }
+//Termina la parte de a animación ------------------------------------------------------------------------------------------------------------------
+
+void display(Shader shader, Model modelo, Model llantas, Model piso)
+{
+	shader.use();
+
+	// create transformations and Projection
+	glm::mat4 tmp = glm::mat4(1.0f);
+	glm::mat4 model = glm::mat4(1.0f);		// initialize Matrix, Use this matrix for individual models
+	glm::mat4 view = glm::mat4(1.0f);		//Use this matrix for ALL models
+	glm::mat4 projection = glm::mat4(1.0f);	//This matrix is for Projection
+
+	//Use "projection" to include Camera
+	projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	view = camera.GetViewMatrix();
+
+	// pass them to the shaders
+	shader.setMat4("model", model);
+	shader.setMat4("view", view);
+	// note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+	shader.setMat4("projection", projection);
+
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.8f, -1.0f));
+	model = glm::scale(model, glm::vec3(0.007f, 0.007f, 0.007f));
+	shader.setMat4("model", model);
+	piso.Draw(shader);
+
+	model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	tmp = model = glm::translate(model, glm::vec3(15.0f, -1.75f, movKit_z));
+	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
+	//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+	shader.setMat4("model", model);
+	modelo.Draw(shader);
+
+	model = glm::translate(tmp, glm::vec3(0.85f, 0.25f, 1.29f));
+	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
+	shader.setMat4("model", model);
+	llantas.Draw(shader);	//Izq delantera
+
+	model = glm::translate(tmp, glm::vec3(-0.85f, 0.25f, 1.29f));
+	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.setMat4("model", model);
+	llantas.Draw(shader);	//Der delantera
+
+	model = glm::translate(tmp, glm::vec3(-0.85f, 0.25f, -1.45f));
+	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.setMat4("model", model);
+	llantas.Draw(shader);	//Der trasera
+
+	model = glm::translate(tmp, glm::vec3(0.85f, 0.25f, -1.45f));
+	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
+	shader.setMat4("model", model);
+	llantas.Draw(shader);	//Izq trase
+}
+//Termina la parte del dibujo de modelos -----------------------------------------------------------------------------------------------------------
 
 void display2(Shader projectionShader) {
 	projectionShader.use();
@@ -355,155 +415,8 @@ void display2(Shader projectionShader) {
 
 	glBindVertexArray(0);
 }
+//Termina la parte del dibujado de primitivas ------------------------------------------------------------------------------------------------------
 
-void display(Shader shader, Model modelo, Model llantas, Model piso)
-{
-	shader.use();
-
-	// create transformations and Projection
-	glm::mat4 tmp = glm::mat4(1.0f);
-	glm::mat4 model = glm::mat4(1.0f);		// initialize Matrix, Use this matrix for individual models
-	glm::mat4 view = glm::mat4(1.0f);		//Use this matrix for ALL models
-	glm::mat4 projection = glm::mat4(1.0f);	//This matrix is for Projection
-
-	//Use "projection" to include Camera
-	projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	view = camera.GetViewMatrix();
-
-	// pass them to the shaders
-	shader.setMat4("model", model);
-	shader.setMat4("view", view);
-	// note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
-	shader.setMat4("projection", projection);
-
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.8f, -1.0f));
-	model = glm::scale(model, glm::vec3(0.007f, 0.007f, 0.007f));
-	shader.setMat4("model", model);
-	piso.Draw(shader);
-
-	model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	tmp = model = glm::translate(model, glm::vec3(15.0f, -1.75f, movKit_z));
-	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-	//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-	shader.setMat4("model", model);
-	modelo.Draw(shader);
-
-	model = glm::translate(tmp, glm::vec3(0.85f, 0.25f, 1.29f));
-	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-	shader.setMat4("model", model);
-	llantas.Draw(shader);	//Izq delantera
-
-	model = glm::translate(tmp, glm::vec3(-0.85f, 0.25f, 1.29f));
-	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	shader.setMat4("model", model);
-	llantas.Draw(shader);	//Der delantera
-
-	model = glm::translate(tmp, glm::vec3(-0.85f, 0.25f, -1.45f));
-	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	shader.setMat4("model", model);
-	llantas.Draw(shader);	//Der trasera
-
-	model = glm::translate(tmp, glm::vec3(0.85f, 0.25f, -1.45f));
-	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-	shader.setMat4("model", model);
-	llantas.Draw(shader);	//Izq trase
-}
-
-int main()
-{
-    // glfw: initialize and configure
-    // ------------------------------
-    glfwInit();
-    /*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
-
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
-#endif
-
-    // glfw window creation
-    // --------------------
-	monitors = glfwGetPrimaryMonitor();
-	getResolution();
-
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Practica 10", NULL, NULL);
-    if (window == NULL)
-    {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-	glfwSetWindowPos(window, 0, 30);
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, resize);
-	glfwSetCursorPosCallback(window, mouse_callback);
-	glfwSetScrollCallback(window, scroll_callback);
-
-	//To Enable capture of our mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
-	glewInit();
-
-
-	//Mis funciones
-	//Datos a utilizar
-	LoadTextures();
-	myData();
-	glEnable(GL_DEPTH_TEST);
-	
-	Shader projectionShader("shaders/shader_texture_color.vs", "shaders/shader_texture_color.fs");
-	Shader modelShader("Shaders/modelLoading.vs", "Shaders/modelLoading.fs");
-	// Load models
-	Model ourModel = ((char *)"Models/Lambo/carroseria.obj");
-	Model llantasModel = ((char *)"Models/Lambo/Wheel.obj");
-	Model pisoModel = ((char *)"Models/piso/piso.obj");
-
-    
-	glm::mat4 projection = glm::mat4(1.0f);	//This matrix is for Projection
-	projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	// render loop
-    // While the windows is not closed
-    while (!glfwWindowShouldClose(window))
-    {
-		// per-frame time logic
-		// --------------------
-		double currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-        // input
-        // -----
-        my_input(window);
-		animate();
-
-        // render
-        // Backgound color
-        glClearColor(0.0f, 0.95f, 1.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		//display(modelShader, ourModel, llantasModel);
-		display(modelShader, ourModel, llantasModel, pisoModel);
-		display2(projectionShader);
-
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-
-    // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-
-    glfwTerminate();
-    return 0;
-}
-
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
 void my_input(GLFWwindow *window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -519,12 +432,10 @@ void my_input(GLFWwindow *window)
 		camera.ProcessKeyboard(RIGHT, (float)deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 		animacion = true;
-	
-
 }
+//Termina el uso de las teclas ---------------------------------------------------------------------------------------------------------------------
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
 void resize(GLFWwindow* window, int width, int height)
 {
     // Set the Viewport to the size of the created window
@@ -532,7 +443,6 @@ void resize(GLFWwindow* window, int width, int height)
 }
 
 // glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	if (firstMouse)
@@ -556,4 +466,95 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(yoffset);
+}
+
+int main()
+{
+	// glfw: initialize and configure
+	// ------------------------------
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+#ifdef __APPLE__
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+#endif
+
+	// glfw window creation
+	// --------------------
+	monitors = glfwGetPrimaryMonitor();
+	getResolution();
+
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Practica 10", NULL, NULL);
+	if (window == NULL)
+	{
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwSetWindowPos(window, 0, 30);
+	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, resize);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
+
+	//To Enable capture of our mouse
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+	glewInit();
+
+
+	//Mis funciones
+	//Datos a utilizar
+	LoadTextures();
+	myData();
+	glEnable(GL_DEPTH_TEST);
+
+	Shader projectionShader("shaders/shader_texture_color.vs", "shaders/shader_texture_color.fs");
+	Shader modelShader("Shaders/modelLoading.vs", "Shaders/modelLoading.fs");
+	// Load models
+	Model ourModel = ((char *)"Models/Lambo/carroseria.obj");
+	Model llantasModel = ((char *)"Models/Lambo/Wheel.obj");
+	Model pisoModel = ((char *)"Models/piso/piso.obj");
+
+
+	glm::mat4 projection = glm::mat4(1.0f);	//This matrix is for Projection
+	projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	// render loop
+	// While the windows is not closed
+	while (!glfwWindowShouldClose(window))
+	{
+		// per-frame time logic
+		// --------------------
+		double currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+		// input
+		// -----
+		my_input(window);
+		animate();
+
+		// render
+		// Backgound color
+		glClearColor(0.0f, 0.95f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		//display(modelShader, ourModel, llantasModel);
+		display(modelShader, ourModel, llantasModel, pisoModel);
+		display2(projectionShader);
+
+		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// -------------------------------------------------------------------------------
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+	// glfw: terminate, clearing all previously allocated GLFW resources.
+	// ------------------------------------------------------------------
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+
+	glfwTerminate();
+	return 0;
 }
