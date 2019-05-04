@@ -453,6 +453,7 @@ void display2(Shader projectionShader) {
 	projectionShader.setInt("texture1", t_pizarron);
 	glDrawArrays(GL_QUADS, 24, 24);	*/
 
+	//Ediciio central
 	tmp = model = glm::mat4(1.0f);
 	model = glm::scale(model, glm::vec3(12.0f, 4.0f, 12.0f));
 	projectionShader.setMat4("model", model);
@@ -480,7 +481,68 @@ void display2(Shader projectionShader) {
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pizarron);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	//Edificio Derecho
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(11.0f, 0.0f, -8.0f));
+	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 38.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_patas);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 38.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_pizarron);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 38.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_mesa);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 38.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_unam);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	
+	//Edificio Izquierdo	
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(-11.0f, 0.0f, 18.0f));
+	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 30.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_mesa);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 30.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_pizarron);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 30.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_unam);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 30.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_patas);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+
 }
 //Termina la parte del dibujado de primitivas ------------------------------------------------------------------------------------------------------
 
