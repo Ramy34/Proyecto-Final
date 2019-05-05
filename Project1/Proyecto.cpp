@@ -19,7 +19,7 @@ GLFWmonitor *monitors;
 GLuint VBO, VAO, EBO;
 
 //Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 15.0f));
+Camera camera(glm::vec3(11.0f, 10.0f, 31.0f));
 double	lastX = 0.0f,
 		lastY = 0.0f;
 bool firstMouse = true;
@@ -51,6 +51,9 @@ unsigned int	t_unam,
 				t_mesa,
 				t_patas,
 				t_pizarron,
+				t_ladrillo,
+				t_pared,
+				t_pared_puertas,
 				t_texture;
 
 //Ciclos de mesas
@@ -101,7 +104,7 @@ unsigned int generateTextures(const char* filename, bool alfa)
 	}
 	else
 	{
-		std::cout << "Failed to load texture" << std::endl;
+		std::cout << "No se pudo cargar las texturas :,(" << std::endl;
 		return 100;
 	}
 
@@ -114,6 +117,9 @@ void LoadTextures()
 	t_patas = generateTextures("Texturas/patas.png", 1);
 	t_mesa = generateTextures("Texturas/mesa.png", 1);
 	t_pizarron = generateTextures("Texturas/Pizarron.png", 1);
+	t_ladrillo = generateTextures("Texturas/Ladrillo.png", 1);
+	t_pared = generateTextures("Texturas/pared.png", 1);
+	t_pared_puertas = generateTextures("Texturas/pared_puertas.png", 1);
 	t_texture = generateTextures("Texturas/awesomeface.png", 1);
 	
 
@@ -134,6 +140,15 @@ void LoadTextures()
 	glBindTexture(GL_TEXTURE_2D, t_pizarron);
 
 	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, t_ladrillo);
+
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, t_pared);
+
+	glActiveTexture(GL_TEXTURE7);
+	glBindTexture(GL_TEXTURE_2D, t_pared_puertas);
+
+	glActiveTexture(GL_TEXTURE8);
 	glBindTexture(GL_TEXTURE_2D, t_texture);
 	
 }
@@ -204,7 +219,11 @@ void myData()
 		 0.5f,  0.5f, -0.5f,  0.5f,  0.5f,
 		 0.5f,  0.5f,  0.5f,  0.5f,  0.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,
-
+		//Paredes de puertas
+		0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  //Cara Derecha 48
+		 0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.6666f,
+		 0.5f, -0.5f,  0.5f,  0.0f,  0.6666f,
 
 	};
 
@@ -337,25 +356,77 @@ void display2(Shader projectionShader) {
 
 	glBindVertexArray(VAO);
 	//Dibujo del salón de cómputo
-	/*
+	
+	//Paredes
+	model = glm::mat4(1.0f); //Pared que da a los pasillos
+	model = glm::translate(model, glm::vec3(8.0f, 8.0f, -8.5f));
+	model = glm::scale(model, glm::vec3(0.1f, 4.0f, 25.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_pared_puertas);
+	glDrawArrays(GL_QUADS, 48, 4);
+
+	//Paredes que dividen los salones
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(12.01f, 8.0f, -21.0f));
+	model = glm::scale(model, glm::vec3(7.95f, 4.0f, 0.01f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_pared);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 8.0f));
+	model = glm::scale(model, glm::vec3(7.95f, 4.0f, 0.01f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_pared);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 9.0f));
+	model = glm::scale(model, glm::vec3(7.95f, 4.0f, 0.01f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_pared);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 8.0f)); //Ubicación del salón
+	model = glm::scale(model, glm::vec3(7.97f, 4.0f, 0.01f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_pared);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+
+
+
+
 	//Dibujo de la mesa
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(10.0f, 0.375f, -2.5f));
-
-	for (i = 0; i < 2; i++) {
-		for (j = 0; j < 3; j++) {
-			tmp = model;
-			model = glm::scale(model, glm::vec3(20.5f, 0.25f, 5.5f));
-			projectionShader.setMat4("model", model);
-			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-			projectionShader.setInt("texture1", t_mesa);
-			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-			model = tmp;
-			model = glm::translate(model, glm::vec3(0.0f, 0.0f, 15.0f));
-		}
-		model = glm::translate(model, glm::vec3(-35.0f, 0.0f, -45.0f));
+	model = glm::translate(model, glm::vec3(14.0f, 8.0f, -18.5f)); //Ubicación del salón
+	
+	for (j = 0; j < 3; j++) {
+		tmp = model;
+		model = glm::scale(model, glm::vec3(4.0f, 0.01f, 1.0f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_mesa);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		model = tmp;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
 	}
+	model = glm::translate(model, glm::vec3(-4.0f, 0.0f, -6.0f));
 
+	for (j = 0; j < 3; j++) {
+		tmp = model;
+		model = glm::scale(model, glm::vec3(3.0f, 0.01f, 1.0f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_mesa);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		model = tmp;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
+	}
+	/*
 	//Dibujo de las patas de la mesa
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
@@ -442,17 +513,18 @@ void display2(Shader projectionShader) {
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_mesa);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);*/
 
 	//Pizarrón
-	model = glm::mat4(1.0f);
+	/*model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(11.0f, 8.0f, -16.0f)); //Ubicación del salón
 	tmp = model = glm::translate(model, glm::vec3(-5.0f, 4.0f, -20.0f));
 	model = glm::scale(model, glm::vec3(40.0f, 6.0f, 0.25f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pizarron);
-	glDrawArrays(GL_QUADS, 24, 24);	*/
-
+	glDrawArrays(GL_QUADS, 24, 24);*/
+	
 	//Ediciio central
 	tmp = model = glm::mat4(1.0f);
 	model = glm::scale(model, glm::vec3(12.0f, 4.0f, 12.0f));
@@ -481,7 +553,7 @@ void display2(Shader projectionShader) {
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pizarron);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
+	
 	//Edificio Derecho
 	model = glm::mat4(1.0f);
 	tmp = model = glm::translate(model, glm::vec3(11.0f, 0.0f, -8.0f));
@@ -502,19 +574,19 @@ void display2(Shader projectionShader) {
 	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 38.0f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_mesa);
+	projectionShader.setInt("texture1", t_unam);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 38.0f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_unam);
+	projectionShader.setInt("texture1", t_mesa);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	
 	//Edificio Izquierdo	
 	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-11.0f, 0.0f, 18.0f));
+	tmp = model = glm::translate(model, glm::vec3(-11.0f, 0.0f, 8.0f));
 	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 30.0f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
@@ -541,6 +613,11 @@ void display2(Shader projectionShader) {
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_patas);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+
+
+
+
 	glBindVertexArray(0);
 
 }
