@@ -234,6 +234,11 @@ void myData()
 		-0.5f,  0.5f,  0.5f,  1.0f,  1.0f, 
 		-0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.3333f, //56
+		-0.5f,  0.5f,  0.5f,  1.0f,  0.3333f,
+		-0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
 	};
 
 	unsigned int indices[] = {
@@ -407,6 +412,18 @@ void display2(Shader projectionShader) {
 		glDrawArrays(GL_QUADS, 48, 4);
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
 	}
+	tmp = model = glm::translate(tmp, glm::vec3(-9.89f, -16.0f, 0.0f));
+	for (i = 0; i < 4; i++) {
+		model = glm::scale(model, glm::vec3(0.11f, 3.999f, 8.0f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_pared_ventanas);
+		glDrawArrays(GL_QUADS, 56, 4);
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	}
+
+
+
 
 	model = glm::mat4(1.0f); //Salón central
 	tmp = model = glm::translate(model, glm::vec3(15.94f, 0.0f, -10.5f));
