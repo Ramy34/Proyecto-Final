@@ -54,6 +54,7 @@ unsigned int	t_unam,
 				t_ladrillo,
 				t_pared,
 				t_pared_puertas,
+				t_concreto,
 				t_texture;
 
 //Ciclos de mesas
@@ -120,6 +121,7 @@ void LoadTextures()
 	t_ladrillo = generateTextures("Texturas/Ladrillo.png", 1);
 	t_pared = generateTextures("Texturas/pared.png", 1);
 	t_pared_puertas = generateTextures("Texturas/pared_puertas.png", 1);
+	t_concreto = generateTextures("Texturas/Concreto.png", 1);
 	t_texture = generateTextures("Texturas/awesomeface.png", 1);
 	
 
@@ -149,6 +151,9 @@ void LoadTextures()
 	glBindTexture(GL_TEXTURE_2D, t_pared_puertas);
 
 	glActiveTexture(GL_TEXTURE8);
+	glBindTexture(GL_TEXTURE_2D, t_concreto);
+
+	glActiveTexture(GL_TEXTURE9);
 	glBindTexture(GL_TEXTURE_2D, t_texture);
 	
 }
@@ -220,17 +225,12 @@ void myData()
 		 0.5f,  0.5f,  0.5f,  0.5f,  0.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,
 		//Paredes de puertas
-		0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  //48
+		 0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  //48
 		 0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
 		 0.5f, -0.5f, -0.5f,  1.0f,  0.6666f,
 		 0.5f, -0.5f,  0.5f,  0.0f,  0.6666f,
 
-		 0.5f,  0.5f,  0.5f,   0.0f,  0.3333f,  //52
-		 0.5f,  0.5f, -0.5f,  1.0f,  0.3333f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f, //56
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f, //52
 		-0.5f,  0.5f,  0.5f,  1.0f,  1.0f, 
 		-0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
@@ -368,7 +368,20 @@ void display2(Shader projectionShader) {
 
 	//----------------------------------------------------------------Paredes-------------------------------------------------------------------------------
 	//Edificio Derecho
-
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(11.0f, 0.0f, 11.0f));
+	for (i = 0; i < 2; i++) {
+		for (j = 0; j < 4; j++) {
+			model = glm::scale(model, glm::vec3(10.0f, 4.0f, 0.1f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_concreto);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+		}
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, -16.0f, -44.0f));
+	}
+	
 	//Pared que da a los pasillos
 	model = glm::mat4(1.0f);
 	tmp = model = glm::translate(model, glm::vec3(8.125f, 0.0f, -21.0f));
@@ -377,7 +390,7 @@ void display2(Shader projectionShader) {
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_pared);
-		glDrawArrays(GL_QUADS, 56, 4);
+		glDrawArrays(GL_QUADS, 52, 4);
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
 	}
 
@@ -388,7 +401,7 @@ void display2(Shader projectionShader) {
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_pared);
-		glDrawArrays(GL_QUADS, 56, 4);
+		glDrawArrays(GL_QUADS, 52, 4);
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
 	}
 
@@ -399,7 +412,7 @@ void display2(Shader projectionShader) {
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_pared);
-		glDrawArrays(GL_QUADS, 56, 4);
+		glDrawArrays(GL_QUADS, 52, 4);
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
 	}
 
@@ -462,7 +475,7 @@ void display2(Shader projectionShader) {
 			projectionShader.setMat4("model", model);
 			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 			projectionShader.setInt("texture1", t_pared);
-			glDrawArrays(GL_QUADS, 56, 4);
+			glDrawArrays(GL_QUADS, 52, 4);
 			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 6.0f));
 		}
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, -24.0f));
