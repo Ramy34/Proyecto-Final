@@ -19,7 +19,7 @@ GLFWmonitor *monitors;
 GLuint VBO, VAO, EBO;
 
 //Camera
-Camera camera(glm::vec3(11.0f, 10.0f, 31.0f));
+Camera camera(glm::vec3(11.0f, 10.0f, 0.0f));
 double	lastX = 0.0f,
 		lastY = 0.0f;
 bool firstMouse = true;
@@ -356,7 +356,7 @@ void display2(Shader projectionShader) {
 
 	glBindVertexArray(VAO);
 	//Dibujo del salón de cómputo
-	
+
 	//Paredes
 	model = glm::mat4(1.0f); //Pared que da a los pasillos
 	model = glm::translate(model, glm::vec3(8.0f, 8.0f, -8.5f));
@@ -369,44 +369,40 @@ void display2(Shader projectionShader) {
 	//Paredes que dividen los salones
 	model = glm::mat4(1.0f);
 	tmp = model = glm::translate(model, glm::vec3(12.01f, 8.0f, -21.0f));
-	model = glm::scale(model, glm::vec3(7.95f, 4.0f, 0.01f));
+	model = glm::scale(model, glm::vec3(7.95f, 3.99f, 0.01f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pared);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 8.0f));
-	model = glm::scale(model, glm::vec3(7.95f, 4.0f, 0.01f));
+	model = glm::scale(model, glm::vec3(7.95f, 3.99f, 0.01f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pared);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 9.0f));
-	model = glm::scale(model, glm::vec3(7.95f, 4.0f, 0.01f));
+	model = glm::scale(model, glm::vec3(7.95f, 3.99f, 0.01f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pared);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 8.0f)); //Ubicación del salón
-	model = glm::scale(model, glm::vec3(7.97f, 4.0f, 0.01f));
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 8.0f));
+	model = glm::scale(model, glm::vec3(7.95f, 3.99f, 0.01f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pared);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-
-
-
 
 	//Dibujo de la mesa
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(14.0f, 8.0f, -18.5f)); //Ubicación del salón
-	
+	model = glm::translate(model, glm::vec3(14.0f, 6.99f, -18.5f)); //Ubicación del salón
+
 	for (j = 0; j < 3; j++) {
 		tmp = model;
-		model = glm::scale(model, glm::vec3(4.0f, 0.01f, 1.0f));
+		model = glm::scale(model, glm::vec3(3.98f, 0.01f, 1.0f));
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_mesa);
@@ -426,51 +422,90 @@ void display2(Shader projectionShader) {
 		model = tmp;
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
 	}
-	/*
+
 	//Dibujo de las patas de la mesa
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
-	for (i = 0; i < 2; i++) {
-		for (j = 0; j < 3; j++) {
-			tmp = model;
-			model = glm::scale(model, glm::vec3(0.5f, 2.5f, 0.5f));
-			projectionShader.setMat4("model", model);
-			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-			projectionShader.setInt("texture1", t_patas);
-			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-			model = tmp;
+	model = glm::translate(model, glm::vec3(12.25f, 6.5f, -18.125f));
+	for (j = 0; j < 3; j++) {
+		tmp = model;
+		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_patas);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		model = tmp;
 
-			model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-			tmp = model;
-			model = glm::scale(model, glm::vec3(0.5f, 2.5f, 0.5f));
-			projectionShader.setMat4("model", model);
-			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-			projectionShader.setInt("texture1", t_patas);
-			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-			model = tmp;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.8f));
+		tmp = model;
+		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_patas);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		model = tmp;
 
-			model = glm::translate(model, glm::vec3(20.0f, 0.0f, 0.0f));
-			tmp = model;
-			model = glm::scale(model, glm::vec3(0.5f, 2.5f, 0.5f));
-			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-			projectionShader.setInt("texture1", t_patas);
-			projectionShader.setMat4("model", model);
-			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-			model = tmp;
+		model = glm::translate(model, glm::vec3(3.5f, 0.0f, 0.0f));
+		tmp = model;
+		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_patas);
+		projectionShader.setMat4("model", model);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		model = tmp;
 
-			model = glm::translate(model, glm::vec3(0.0f, 0.0f, 5.0f));
-			tmp = model;
-			model = glm::scale(model, glm::vec3(0.5f, 2.5f, 0.5f));
-			projectionShader.setMat4("model", model);
-			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-			projectionShader.setInt("texture1", t_patas);
-			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-			model = tmp;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.8f));
+		tmp = model;
+		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_patas);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		model = tmp;
 
-			model = glm::translate(model, glm::vec3(-20.0f, 0.0f, 15.0f));
-		}
-		model = glm::translate(model, glm::vec3(-35.0f, 0.0f, -45.0f));
+		model = glm::translate(model, glm::vec3(-3.5f, 0.0f, 2.0f));
 	}
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(8.75f, 6.5f, -18.125f));
+	for (j = 0; j < 3; j++) {
+		tmp = model;
+		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_patas);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		model = tmp;
+
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.8f));
+		tmp = model;
+		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_patas);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		model = tmp;
+
+		model = glm::translate(model, glm::vec3(2.5f, 0.0f, 0.0f));
+		tmp = model;
+		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_patas);
+		projectionShader.setMat4("model", model);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		model = tmp;
+
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.8f));
+		tmp = model;
+		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_patas);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		model = tmp;
+
+		model = glm::translate(model, glm::vec3(-2.5f, 0.0f, 2.0f));
+	}
+/*
 	//Escritorio
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(5.0f, -1.0f, -10.0f));
@@ -516,15 +551,15 @@ void display2(Shader projectionShader) {
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);*/
 
 	//Pizarrón
-	/*model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(11.0f, 8.0f, -16.0f)); //Ubicación del salón
-	tmp = model = glm::translate(model, glm::vec3(-5.0f, 4.0f, -20.0f));
-	model = glm::scale(model, glm::vec3(40.0f, 6.0f, 0.25f));
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(12.0f, 8.0f, -20.999f)); //Ubicación del salón
+	//tmp = model = glm::translate(model, glm::vec3(-5.0f, 4.0f, -20.0f));
+	model = glm::scale(model, glm::vec3(5.0f, 2.0f, 0.01f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pizarron);
-	glDrawArrays(GL_QUADS, 24, 24);*/
-	
+	glDrawArrays(GL_QUADS, 24, 24);
+
 	//Ediciio central
 	tmp = model = glm::mat4(1.0f);
 	model = glm::scale(model, glm::vec3(12.0f, 4.0f, 12.0f));
@@ -613,10 +648,6 @@ void display2(Shader projectionShader) {
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_patas);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-
-
-
 
 	glBindVertexArray(0);
 
