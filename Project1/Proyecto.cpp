@@ -64,6 +64,7 @@ unsigned int	t_unam,
 				t_monitor,
 				t_cpu,
 				t_teclado,
+				t_piso_techo,
 				t_texture;
 
 //Ciclos de mesas
@@ -135,6 +136,7 @@ void LoadTextures()
 	t_monitor = generateTextures("Texturas/Monitor.png", 1);
 	t_cpu = generateTextures("Texturas/CPU.png", 1);
 	t_teclado = generateTextures("Texturas/teclado.jpg", 0);
+	t_piso_techo = generateTextures("Texturas/Piso_Techo.png", 1);
 	t_texture = generateTextures("Texturas/awesomeface.png", 1);
 	
 
@@ -179,6 +181,9 @@ void LoadTextures()
 	glBindTexture(GL_TEXTURE_2D, t_teclado);
 	
 	glActiveTexture(GL_TEXTURE13);
+	glBindTexture(GL_TEXTURE_2D, t_piso_techo);
+
+	glActiveTexture(GL_TEXTURE14);
 	glBindTexture(GL_TEXTURE_2D, t_texture);
 }
 //Termina la parte de las texturas -----------------------------------------------------------------------------------------------------------------
@@ -324,6 +329,37 @@ void myData()
 		0.5f, 0.5f, -0.5f,   0.5f, 1.0f,
 		0.5f, 0.5f, 0.5f,    0.5f, 0.5f,
 		-0.5f, 0.5f, 0.5f,   0.0f, 0.5f,
+//Piso_Techo
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.5f,  //Cara Trasera 108
+		 0.5f, -0.5f, -0.5f, 1.0f, 0.5f,
+		 0.5f, 0.5f, -0.5f,  1.0f, 0.0f,
+		 -0.5f, 0.5f, -0.5f, 0.0f, 0.0f,
+
+		 -0.5f, 0.5f, 0.5f,  0.0f, 0.5f,  //Cara Frontal 112
+		 0.5f, 0.5f, 0.5f,   1.0f, 0.5f,
+		 0.5f, -0.5f, 0.5f,  1.0f, 0.0f,
+		 -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
+		 -0.5f, 0.5f, -0.5f, 0.0f, 0.5f, //Cara Izquierda 116
+		 -0.5f, 0.5f, 0.5f,  1.0f, 0.5f,
+		 -0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+		 -0.5f, -0.5f, -0.5f,0.0f, 0.0f,
+
+		 0.5f, 0.5f, 0.5f,   0.0f, 0.5f,  //Cara Derecha 96
+		 0.5f, 0.5f, -0.5f,  1.0f, 0.5f,
+		 0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		 0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
+
+		 -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,  //Cara Inferior 100
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, 0.5f,   1.0f, 0.5f,
+		 -0.5f, -0.5f, 0.5f,  0.0f, 0.5f,
+
+		 -0.5f, 0.5f, -0.5f,  0.0f, 0.5f,  //Cara Superior 104
+		 0.5f, 0.5f, -0.5f,   1.0f, 0.5f,
+		 0.5f, 0.5f, 0.5f,    1.0f, 0.0f,
+		 -0.5f, 0.5f, 0.5f,   0.0f, 0.0f,
+
 	};
 
 	unsigned int indices[] = {
@@ -514,7 +550,7 @@ void display2(Shader projectionShader) {
 
 
 	//Dibujo del salón de cómputo
-	/*
+	
 	//----------------------------------------------------------------Paredes-------------------------------------------------------------------------------
 	//Edificio Derecho
 	model = glm::mat4(1.0f);
@@ -676,6 +712,19 @@ void display2(Shader projectionShader) {
 
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, -27.0f));
 	}
+	//Piso - Techo
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(7.04f, -2.0f, -17.0f));
+	for (i = 0; i < 4; i++) {
+		model = glm::scale(model, glm::vec3(2.06f, 0.05f, 8.0f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_piso_techo);
+		glDrawArrays(GL_QUADS, 108, 24);
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	}
+	
+
 	//Edificio Izquierdo
 	//Paredes que dividen los salones
 	model = glm::mat4(1.0f);
@@ -705,7 +754,7 @@ void display2(Shader projectionShader) {
 			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 6.0f));
 		}
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, -24.0f));
-	}*/
+	}
 
 	//----------------------------------------------------------------------Mesa----------------------------------------------------------------------------
 	model = glm::mat4(1.0f);
@@ -733,7 +782,7 @@ void display2(Shader projectionShader) {
 		model = tmp;
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
 	}
-/*
+
 	//--------------------------------------------------------------------Patas mesa------------------------------------------------------------------------
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(12.25f, 6.5f, -22.125f));
@@ -870,7 +919,7 @@ void display2(Shader projectionShader) {
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pizarron);
 	glDrawArrays(GL_QUADS, 24, 24);
-	*/
+	
 	//-----------------------------------------------------------------Edificios---------------------------------------------------------------------------
 	/*
 	//Ediciio central
