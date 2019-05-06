@@ -63,6 +63,7 @@ unsigned int	t_unam,
 				t_base,
 				t_monitor,
 				t_cpu,
+				t_teclado,
 				t_texture;
 
 //Ciclos de mesas
@@ -133,6 +134,7 @@ void LoadTextures()
 	t_base = generateTextures("Texturas/Base.png", 1);
 	t_monitor = generateTextures("Texturas/Monitor.png", 1);
 	t_cpu = generateTextures("Texturas/CPU.png", 1);
+	t_teclado = generateTextures("Texturas/teclado.jpg", 0);
 	t_texture = generateTextures("Texturas/awesomeface.png", 1);
 	
 
@@ -174,8 +176,10 @@ void LoadTextures()
 	glBindTexture(GL_TEXTURE_2D, t_cpu);
 
 	glActiveTexture(GL_TEXTURE12);
-	glBindTexture(GL_TEXTURE_2D, t_texture);
+	glBindTexture(GL_TEXTURE_2D, t_teclado);
 	
+	glActiveTexture(GL_TEXTURE13);
+	glBindTexture(GL_TEXTURE_2D, t_texture);
 }
 //Termina la parte de las texturas -----------------------------------------------------------------------------------------------------------------
 
@@ -453,7 +457,7 @@ void display2(Shader projectionShader) {
 	glBindVertexArray(VAO);
 	//-----------------------------------------------------------------Computadora--------------------------------------------------------------------------
 	model = glm::mat4(1.0f); //Monitor Base
-	model = glm::translate(model, glm::vec3(12.5f, 7.05f, -22.5f)); //Ubicación del salón
+	model = glm::translate(model, glm::vec3(12.5f, 7.05f, -22.6f)); //Ubicación del salón
 
 	model = glm::rotate(model, glm::radians(base), glm::vec3(0.0f, 1.0f, 0.0f));
 	tmp = model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -498,6 +502,15 @@ void display2(Shader projectionShader) {
 	projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 1.0f));
 	projectionShader.setInt("texture1", t_cpu);
 	glDrawArrays(GL_QUADS, 84, 24);
+
+	//Teclado
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(12.5f, 7.0f, -22.1f)); //Ubicación del salón
+	model = glm::scale(model, glm::vec3(0.99f, 0.005f, 0.2f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_teclado);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 
 	//Dibujo del salón de cómputo
