@@ -67,8 +67,8 @@ unsigned int	t_unam,
 				t_piso_techo,
 				t_texture;
 
-//Ciclos de mesas
-int i, j;
+//Para ciclos
+int i, j, k;
 
 //For model
 bool animacion = false;
@@ -811,12 +811,6 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(-10.0f, 4.0f, 0.0f));
 	}
 
-
-
-
-
-
-
 	//Edificio Izquierdo
 	//Paredes que dividen los salones
 	model = glm::mat4(1.0f);
@@ -848,6 +842,38 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, -24.0f));
 	}
 
+	//Techo_Piso
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(-7.0f, -2.0f, -6.0f));
+	for (k = 0; k < 5; k++) {
+		for (i = 0; i < 5; i++) {
+			for (j = 0; j < 5; j++) {
+				model = glm::scale(model, glm::vec3(2.0f, 0.05f, 6.0f));
+				projectionShader.setMat4("model", model);
+				projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+				projectionShader.setInt("texture1", t_piso_techo);
+				glDrawArrays(GL_QUADS, 108, 24);
+				tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 6.0f));
+			}
+			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, -30.0f));
+		}
+		tmp = model = glm::translate(tmp, glm::vec3(-2.0f, -20.0f, -0.0f));
+	}
+	//Ventanas
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(-16.0f, -0.0f, -6.0f));
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 4; j++) {
+			model = glm::scale(model, glm::vec3(0.01f, 4.0f, 6.0f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_pared_ventanas);
+			glDrawArrays(GL_QUADS, 48, 4);
+			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 6.0f));
+		}
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, -24.0f));
+	}
+		
 	//----------------------------------------------------------------------Mesa----------------------------------------------------------------------------
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(14.0f, 6.99f, -22.5f)); //Ubicación del salón
