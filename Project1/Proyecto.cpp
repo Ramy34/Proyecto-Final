@@ -19,7 +19,7 @@ GLFWmonitor *monitors;
 GLuint VBO, VAO, EBO;
 
 //Camera
-Camera camera(glm::vec3(0.0f, 8.0f, 0.0f));
+Camera camera(glm::vec3(0.0f, 10.0f, 0.0f));
 double	lastX = 0.0f,
 		lastY = 0.0f;
 bool firstMouse = true;
@@ -46,6 +46,11 @@ float	movX = 0.0f,
 		movZ = -5.0f,
 		rotX = 0.0f;
 
+float	base = 0.0f,
+		articulacion1 = 0.0f,
+		articulacion2 = 0.0f,
+		articulacionmon = 0.0f;
+
 //Texture
 unsigned int	t_unam,
 				t_mesa,
@@ -55,6 +60,9 @@ unsigned int	t_unam,
 				t_pared,
 				t_pared_ventanas,
 				t_concreto,
+				t_base,
+				t_monitor,
+				t_cpu,
 				t_texture;
 
 //Ciclos de mesas
@@ -122,6 +130,9 @@ void LoadTextures()
 	t_pared = generateTextures("Texturas/pared.png", 1);
 	t_pared_ventanas = generateTextures("Texturas/pared_puertas.png", 1);
 	t_concreto = generateTextures("Texturas/Concreto.png", 1);
+	t_base = generateTextures("Texturas/Base.png", 1);
+	t_monitor = generateTextures("Texturas/Monitor.png", 1);
+	t_cpu = generateTextures("Texturas/CPU.png", 1);
 	t_texture = generateTextures("Texturas/awesomeface.png", 1);
 	
 
@@ -154,6 +165,15 @@ void LoadTextures()
 	glBindTexture(GL_TEXTURE_2D, t_concreto);
 
 	glActiveTexture(GL_TEXTURE9);
+	glBindTexture(GL_TEXTURE_2D, t_base);
+
+	glActiveTexture(GL_TEXTURE10);
+	glBindTexture(GL_TEXTURE_2D, t_monitor);
+
+	glActiveTexture(GL_TEXTURE11);
+	glBindTexture(GL_TEXTURE_2D, t_cpu);
+
+	glActiveTexture(GL_TEXTURE12);
 	glBindTexture(GL_TEXTURE_2D, t_texture);
 	
 }
@@ -239,6 +259,67 @@ void myData()
 		-0.5f,  0.5f,  0.5f,  1.0f,  0.3333f,
 		-0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
+
+		//Monitor
+		-0.5f, -0.5f, -0.5f,  0.0f,  1.0f,  //Cara Trasera 60
+		 0.5f, -0.5f, -0.5f,  1.0f,  1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f,  0.7f,
+		-0.5f,  0.5f, -0.5f,  0.0,   0.7f,
+
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.5f,  //Cara Frontal 64
+		 0.5f,  0.5f,  0.5f,  0.5f,  0.5f,
+		 0.5f, -0.5f,  0.5f,  0.5f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
+
+		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f, //Cara Izquierda 68
+		-0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f,  1.0f,  0.7f,
+		-0.5f, -0.5f,  0.5f,  0.0,   0.7f,
+
+		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  //Cara Derecha 72
+		 0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.7f,
+		 0.5f, -0.5f,  0.5f,  0.0,   0.7f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f,  1.0f,  //Cara Inferior 76
+		 0.5f, -0.5f, -0.5f,  1.0f,  1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f,  0.7f,
+		-0.5f, -0.5f,  0.5f,  0.0,   0.7f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  //Cara Superior 80
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.7f,
+		-0.5f,  0.5f,  0.5f,  0.0,  0.7f,
+//Cubo del CPU
+		-0.5f, -0.5f, -0.5f, 0.5f, 0.5f,  //Cara Trasera 84
+		0.5f, -0.5f, -0.5f,  1.0f, 0.5f,
+		0.5f, 0.5f, -0.5f,   1.0f, 0.0f,
+		-0.5f, 0.5f, -0.5f,  0.5f, 0.0f,
+
+		-0.5f, 0.5f, 0.5f,   0.5f, 1.0f,  //Cara Frontal 88
+		 0.5f, 0.5f, 0.5f,   1.0f, 1.0f,
+		 0.5f, -0.5f, 0.5f,  1.0f, 0.5f,
+		-0.5f, -0.5f, 0.5f,  0.5f, 0.5f,
+
+		-0.5f, 0.5f, -0.5f,  0.0f, 1.0f, //Cara Izquierda 92
+		-0.5f, 0.5f,  0.5f,  0.5f, 1.0f,
+		-0.5f, -0.5f, 0.5f,  0.5f, 0.5f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.5f,
+
+		0.5f, 0.5f, 0.5f,    0.0f, 1.0f,  //Cara Derecha 96
+		0.5f, 0.5f, -0.5f,   0.5f, 1.0f,
+		0.5f, -0.5f, -0.5f,  0.5f, 0.5f,
+		0.5f, -0.5f, 0.5f,   0.0f, 0.5f,
+
+		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,  //Cara Inferior 100
+		0.5f, -0.5f, -0.5f,  0.5f, 1.0f,
+		0.5f, -0.5f, 0.5f,   0.5f, 0.5f,
+		-0.5f, -0.5f, 0.5f,  0.0f, 0.5f,
+
+		-0.5f, 0.5f, -0.5f,  0.0f, 1.0f,  //Cara Superior 104
+		0.5f, 0.5f, -0.5f,   0.5f, 1.0f,
+		0.5f, 0.5f, 0.5f,    0.5f, 0.5f,
+		-0.5f, 0.5f, 0.5f,   0.0f, 0.5f,
 	};
 
 	unsigned int indices[] = {
@@ -354,6 +435,7 @@ void display2(Shader projectionShader) {
 
 	// create transformations and Projection
 	glm::mat4 tmp = glm::mat4(1.0f);
+	glm::mat4 tmp2 = glm::mat4(1.0f);
 	glm::mat4 model = glm::mat4(1.0f);		// initialize Matrix, Use this matrix for individual models
 	glm::mat4 view = glm::mat4(1.0f);		//Use this matrix for ALL models
 	glm::mat4 projection = glm::mat4(1.0f);	//This matrix is for Projection
@@ -369,8 +451,57 @@ void display2(Shader projectionShader) {
 	projectionShader.setMat4("projection", projection);
 
 	glBindVertexArray(VAO);
-	//Dibujo del salón de cómputo
+	//-----------------------------------------------------------------Computadora--------------------------------------------------------------------------
+	model = glm::mat4(1.0f); //Monitor Base
+	model = glm::translate(model, glm::vec3(12.5f, 7.05f, -22.5f)); //Ubicación del salón
 
+	model = glm::rotate(model, glm::radians(base), glm::vec3(0.0f, 1.0f, 0.0f));
+	tmp = model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.6f, 0.1f, 0.6f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 1.0f));
+	projectionShader.setInt("texture1", t_base);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	model = glm::translate(tmp, glm::vec3(0.0f, -0.05f, 0.05f)); //Tronco
+	model = glm::rotate(model, glm::radians(articulacion1), glm::vec3(-1.0f, 0.0f, 0.0f));
+	tmp = model = glm::translate(model, glm::vec3(0.0f, 0.35f, 0.0f));//moverme al centro de la primitiva
+	model = glm::scale(model, glm::vec3(0.2f, 0.5f, 0.3f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 1.0f));
+	projectionShader.setInt("texture1", t_base);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	model = glm::translate(tmp, glm::vec3(0.0f, 0.15f, 0.1f));//Soporte
+	model = glm::rotate(model, glm::radians(articulacion2), glm::vec3(-1.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.1f, 0.0f));//moverme al centro
+	model = glm::scale(model, glm::vec3(0.4f, 0.2f, 0.4f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 1.0f));
+	projectionShader.setInt("texture1", t_base);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 0.25f));//Pantalla
+	model = glm::rotate(model, glm::radians(articulacionmon), glm::vec3(-1.0f, 0.0f, 0.0f));
+	tmp = model = glm::translate(model, glm::vec3(0.0f, 0.4f, 0.1f));//moverme al centro
+	model = glm::scale(model, glm::vec3(0.8f, 0.5f, 0.1f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 1.0f));
+	projectionShader.setInt("texture1", t_monitor);
+	glDrawArrays(GL_QUADS, 60, 24);
+
+	//CPU
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(13.0f, 7.5f, -22.5f)); //Ubicación del salón
+	model = glm::scale(model, glm::vec3(0.3f, 1.0f, 0.5f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 1.0f));
+	projectionShader.setInt("texture1", t_cpu);
+	glDrawArrays(GL_QUADS, 84, 24);
+
+
+	//Dibujo del salón de cómputo
+	/*
 	//----------------------------------------------------------------Paredes-------------------------------------------------------------------------------
 	//Edificio Derecho
 	model = glm::mat4(1.0f);
@@ -422,9 +553,6 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
 	}
 
-
-
-
 	model = glm::mat4(1.0f); //Salón central
 	tmp = model = glm::translate(model, glm::vec3(15.94f, 0.0f, -10.5f));
 	for (i = 0; i < 2; i++) {
@@ -466,7 +594,6 @@ void display2(Shader projectionShader) {
 		}
 		tmp = model = glm::translate(tmp, glm::vec3(-10.0f, -16.0f, 0.0f));
 	}
-
 
 	//Pared que da a los pasillos
 	model = glm::mat4(1.0f);
@@ -565,7 +692,7 @@ void display2(Shader projectionShader) {
 			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 6.0f));
 		}
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, -24.0f));
-	}
+	}*/
 
 	//----------------------------------------------------------------------Mesa----------------------------------------------------------------------------
 	model = glm::mat4(1.0f);
@@ -593,7 +720,7 @@ void display2(Shader projectionShader) {
 		model = tmp;
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
 	}
-
+/*
 	//--------------------------------------------------------------------Patas mesa------------------------------------------------------------------------
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(12.25f, 6.5f, -22.125f));
@@ -730,7 +857,7 @@ void display2(Shader projectionShader) {
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pizarron);
 	glDrawArrays(GL_QUADS, 24, 24);
-
+	*/
 	//-----------------------------------------------------------------Edificios---------------------------------------------------------------------------
 	/*
 	//Ediciio central
@@ -760,68 +887,8 @@ void display2(Shader projectionShader) {
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pizarron);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);*/
 	
-	//Edificio Derecho
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(11.0f, 0.0f, -8.0f));
-	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 38.0f));
-	projectionShader.setMat4("model", model);
-	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_patas);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 38.0f));
-	projectionShader.setMat4("model", model);
-	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_pizarron);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	
-	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 38.0f));
-	projectionShader.setMat4("model", model);
-	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_unam);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 38.0f));
-	projectionShader.setMat4("model", model);
-	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_mesa);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	
-	//Edificio Izquierdo	
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-11.0f, 0.0f, 8.0f));
-	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 30.0f));
-	projectionShader.setMat4("model", model);
-	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_mesa);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 30.0f));
-	projectionShader.setMat4("model", model);
-	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_pizarron);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 30.0f));
-	projectionShader.setMat4("model", model);
-	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_unam);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(10.0f, 4.0f, 30.0f));
-	projectionShader.setMat4("model", model);
-	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_patas);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	*/
 	glBindVertexArray(0);
 
 }
