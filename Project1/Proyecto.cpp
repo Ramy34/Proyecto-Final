@@ -863,7 +863,7 @@ void display2(Shader projectionShader) {
 	model = glm::mat4(1.0f);
 	tmp = model = glm::translate(model, glm::vec3(-16.0f, -0.0f, -6.0f));
 	for (i = 0; i < 4; i++) {
-		for (j = 0; j < 4; j++) {
+		for (j = 0; j < 5; j++) {
 			model = glm::scale(model, glm::vec3(0.01f, 4.0f, 6.0f));
 			projectionShader.setMat4("model", model);
 			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
@@ -871,9 +871,64 @@ void display2(Shader projectionShader) {
 			glDrawArrays(GL_QUADS, 48, 4);
 			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 6.0f));
 		}
-		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, -24.0f));
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, -30.0f));
 	}
-		
+
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(-6.0f, -0.0f, 18.0f));
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 3; j++) {
+			model = glm::scale(model, glm::vec3(0.01f, 4.0f, 6.0f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_pared_ventanas);
+			glDrawArrays(GL_QUADS, 48, 4);
+			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, -6.0f));
+		}
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 18.0f));
+	}
+
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(-6.0f, -0.0f, -6.0f));
+	for (i = 0; i < 4; i++) {
+		model = glm::scale(model, glm::vec3(0.01f, 4.0f, 6.0f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_pared_ventanas);
+		glDrawArrays(GL_QUADS, 48, 4);
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	}
+	
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(-6.0f, -0.0f, 0.0f));
+	for (i = 0; i < 4; i++) {
+		model = glm::scale(model, glm::vec3(0.01f, 4.0f, 6.0f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_pared_ventanas);
+		glDrawArrays(GL_QUADS, 56, 4);
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
+	}
+
+	//Cemento
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(-11.0f, 0.0f, 21.0f));
+	for (i = 0; i < 4; i++) {
+		model = glm::scale(model, glm::vec3(10.0f, 4.0f, 0.01f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_concreto);
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, -30.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 4.0f, 0.01f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_concreto);
+		glDrawArrays(GL_QUADS, 0, 4);
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 30.0f));
+	}
+	
 	//----------------------------------------------------------------------Mesa----------------------------------------------------------------------------
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(14.0f, 6.99f, -22.5f)); //Ubicación del salón
@@ -1143,7 +1198,7 @@ int main()
 	monitors = glfwGetPrimaryMonitor();
 	getResolution();
 
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Practica 10", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Proyecto Final", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
