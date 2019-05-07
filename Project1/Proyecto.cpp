@@ -65,6 +65,7 @@ unsigned int	t_unam,
 				t_cpu,
 				t_teclado,
 				t_piso_techo,
+				t_pared_ven,
 				t_texture;
 
 //Para ciclos
@@ -137,6 +138,7 @@ void LoadTextures()
 	t_cpu = generateTextures("Texturas/CPU.png", 1);
 	t_teclado = generateTextures("Texturas/teclado.jpg", 0);
 	t_piso_techo = generateTextures("Texturas/Piso_Techo.png", 1);
+	t_pared_ven = generateTextures("Texturas/Pared_Ventana.png", 1);
 	t_texture = generateTextures("Texturas/awesomeface.png", 1);
 	
 
@@ -184,6 +186,9 @@ void LoadTextures()
 	glBindTexture(GL_TEXTURE_2D, t_piso_techo);
 
 	glActiveTexture(GL_TEXTURE14);
+	glBindTexture(GL_TEXTURE_2D, t_pared_ven);
+
+	glActiveTexture(GL_TEXTURE15);
 	glBindTexture(GL_TEXTURE_2D, t_texture);
 }
 //Termina la parte de las texturas -----------------------------------------------------------------------------------------------------------------
@@ -345,21 +350,28 @@ void myData()
 		 -0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
 		 -0.5f, -0.5f, -0.5f,0.0f, 0.0f,
 
-		 0.5f, 0.5f, 0.5f,   0.0f, 0.5f,  //Cara Derecha 96
+		 0.5f, 0.5f, 0.5f,   0.0f, 0.5f,  //Cara Derecha 120
 		 0.5f, 0.5f, -0.5f,  1.0f, 0.5f,
 		 0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
 		 0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
 
-		 -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,  //Cara Inferior 100
+		 -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,  //Cara Inferior 124
 		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
 		 0.5f, -0.5f, 0.5f,   1.0f, 0.5f,
 		 -0.5f, -0.5f, 0.5f,  0.0f, 0.5f,
 
-		 -0.5f, 0.5f, -0.5f,  0.0f, 0.5f,  //Cara Superior 104
+		 -0.5f, 0.5f, -0.5f,  0.0f, 0.5f,  //Cara Superior 128
 		 0.5f, 0.5f, -0.5f,   1.0f, 0.5f,
 		 0.5f, 0.5f, 0.5f,    1.0f, 0.0f,
 		 -0.5f, 0.5f, 0.5f,   0.0f, 0.0f,
 
+		-0.5f, 0.5f, -0.5f,  0.0f, 1.0f, //Cara Trasera 132
+		 0.5f, 0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,  
+		 
+		 
+		
 	};
 
 	unsigned int indices[] = {
@@ -928,9 +940,10 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 30.0f));
 	}
 	//------------------------------------------------------------Edificio Central--------------------------------------------------------------------------
+	//Piso_Techo
 	model = glm::mat4(1.0f);
 	tmp = model = glm::translate(model, glm::vec3(-5.0f, -2.0f, 3.0f));
-	for (k = 0; k < 4; k++) {
+	for (k = 0; k < 5; k++) {
 		for (j = 0; j < 6; j++) {
 			for (i = 0; i < 2; i++) {
 				model = glm::scale(model, glm::vec3(2.0f, 0.05f, 6.0f));
@@ -944,6 +957,73 @@ void display2(Shader projectionShader) {
 		}
 		tmp = model = glm::translate(tmp, glm::vec3(-12.0f, 4.0f, 0.0f));
 	}
+
+	//Paredes
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(1.0f, 0.0f, -6.0f));
+	for (i = 0; i < 2; i++) {
+		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 0.01f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_pared_ven);
+		glDrawArrays(GL_QUADS, 132, 4);
+		tmp = model = glm::translate(tmp, glm::vec3(-2.0f, 0.0f, 0.0f));
+	}
+
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(-5.0f, 4.0f, -6.0f));
+	for (j = 0; j < 3; j++) {
+		for (i = 0; i < 6; i++) {
+			model = glm::scale(model, glm::vec3(2.0f, 4.0f, 0.01f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_pared_ven);
+			glDrawArrays(GL_QUADS, 132, 4);
+			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 12.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 4.0f, 0.01f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_pared_ven);
+			glDrawArrays(GL_QUADS, 132, 4);
+			tmp = model = glm::translate(tmp, glm::vec3(2.0f, 0.0f, -12.0f));
+		}
+		tmp = model = glm::translate(tmp, glm::vec3(-12.0f, 4.0f, 0.0f));
+	}
+
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(-5.0f, 0.0f, -6.0f));
+	for (i = 0; i < 2; i++) {
+		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 0.01f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_pared_ven);
+		glDrawArrays(GL_QUADS, 132, 4);
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 12.0f));
+		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 0.01f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_pared_ven);
+		glDrawArrays(GL_QUADS, 132, 4);
+		tmp = model = glm::translate(tmp, glm::vec3(2.0f, 0.0f, -12.0f));
+	}
+
+	model = glm::mat4(1.0f);
+	tmp = model = glm::translate(model, glm::vec3(5.0f, 0.0f, -6.0f));
+	for (i = 0; i < 2; i++) {
+		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 0.01f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_pared_ven);
+		glDrawArrays(GL_QUADS, 132, 4);
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 12.0f));
+		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 0.01f));
+		projectionShader.setMat4("model", model);
+		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+		projectionShader.setInt("texture1", t_pared_ven);
+		glDrawArrays(GL_QUADS, 132, 4);
+		tmp = model = glm::translate(tmp, glm::vec3(-2.0f, 0.0f, -12.0f));
+	}
+	
 
 	//----------------------------------------------------------------------Mesa----------------------------------------------------------------------------
 	model = glm::mat4(1.0f);
