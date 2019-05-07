@@ -19,7 +19,7 @@ GLFWmonitor *monitors;
 GLuint VBO, VAO, EBO;
 
 //Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+Camera camera(glm::vec3(0.0f, 8.0f, -15.0f));
 double	lastX = 0.0f,
 		lastY = 0.0f;
 bool firstMouse = true;
@@ -71,6 +71,8 @@ unsigned int	t_unam,
 
 //Para ciclos
 int i, j, k;
+
+float temp = 0.0f;
 
 //For model
 bool animacion = false;
@@ -424,14 +426,12 @@ void animate(void)
 {
 	if (animacion)
 	{
-		movKit_z += 0.03f;
-		if (movKit_z >= 15.0f)
-			animacion = false;
+		articulacion1 += 0.3f;
 	}
 }
 //Termina la parte de a animación ------------------------------------------------------------------------------------------------------------------
 
-void display(Shader shader, Model modelo, Model llantas, Model piso)
+void display(Shader shader, Model piso)
 {
 	shader.use();
 
@@ -459,35 +459,11 @@ void display(Shader shader, Model modelo, Model llantas, Model piso)
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 35.0f));
 	}
 
-	/*
-	model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	tmp = model = glm::translate(model, glm::vec3(15.0f, -1.75f, movKit_z));
-	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-	//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-	shader.setMat4("model", model);
-	modelo.Draw(shader);
-
-	model = glm::translate(tmp, glm::vec3(0.85f, 0.25f, 1.29f));
-	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-	shader.setMat4("model", model);
-	llantas.Draw(shader);	//Izq delantera
-
-	model = glm::translate(tmp, glm::vec3(-0.85f, 0.25f, 1.29f));
-	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	shader.setMat4("model", model);
-	llantas.Draw(shader);	//Der delantera
-
-	model = glm::translate(tmp, glm::vec3(-0.85f, 0.25f, -1.45f));
-	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	shader.setMat4("model", model);
-	llantas.Draw(shader);	//Der trasera
-
-	model = glm::translate(tmp, glm::vec3(0.85f, 0.25f, -1.45f));
-	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-	shader.setMat4("model", model);
-	llantas.Draw(shader);	//Izq trase*/
+	//model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//tmp = model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0));
+	//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	//shader.setMat4("model", model);
+	//arbol.Draw(shader);
 }
 //Termina la parte del dibujo de modelos -----------------------------------------------------------------------------------------------------------
 
@@ -513,8 +489,7 @@ void display2(Shader projectionShader) {
 
 	glBindVertexArray(VAO);
 	//-----------------------------------------------------------------Computadora--------------------------------------------------------------------------
-	model = glm::mat4(1.0f); //Monitor Base
-	tmp = model = glm::translate(model, glm::vec3(12.26f, 7.02, -22.6f)); //Ubicación del salón
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(12.26f, 7.02, temp = -22.6f));//Ubicación del salón
 	for (j = 0; j < 3; j++) {
 		for (i = 0; i < 4; i++) {
 			model = glm::rotate(model, glm::radians(base), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -526,30 +501,30 @@ void display2(Shader projectionShader) {
 			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 			model = glm::translate(tmp, glm::vec3(0.0f, 0.17f, 0.05f)); //Tronco
-			model = glm::rotate(model, glm::radians(articulacion1), glm::vec3(-1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(articulacion1), glm::vec3(0.0f, 1.0f, 0.0f));
+			tmp = model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); //Tronco
 			model = glm::scale(model, glm::vec3(0.1f, 0.3f, 0.1f));
 			projectionShader.setMat4("model", model);
 			projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 1.0f));
 			projectionShader.setInt("texture1", t_base);
 			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-			model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 0.1f));//Pantalla
+			model = glm::translate(tmp, glm::vec3(0.0f, -0.05f, 0.1f));//Pantalla
 			model = glm::rotate(model, glm::radians(articulacionmon), glm::vec3(-1.0f, 0.0f, 0.0f));
-			tmp = model = glm::translate(model, glm::vec3(0.0f, 0.35f, 0.0f));
+			tmp = model = glm::translate(model, glm::vec3(0.0f, 0.25f, -0.05f));
 			model = glm::scale(model, glm::vec3(0.6f, 0.4f, 0.05));
 			projectionShader.setMat4("model", model);
 			projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 1.0f));
 			projectionShader.setInt("texture1", t_monitor);
 			glDrawArrays(GL_QUADS, 60, 24);
 
-			tmp = model = glm::translate(tmp, glm::vec3(0.98f, -0.35f, -0.1f));
+			model = glm::translate(glm::mat4(1.0f), glm::vec3( (i + 1) + 12.26f , 7.02, temp));
 		}
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(12.26f, 7.02,((2*(j + 1)) - 22.6f) ) );
+		temp = (2 * (j + 1)) - 22.6f;
+		model = glm::translate(glm::mat4(1.0f), glm::vec3(12.26f, 7.02, temp ));
 	}
 	
-	model = glm::mat4(1.0f); //Monitor Base
-	tmp = model = glm::translate(model, glm::vec3(8.85f, 7.02, -22.6f)); //Ubicación del salón
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(8.85f, 7.02, temp = -22.6f)); //Ubicación del salón
 	for (j = 0; j < 3; j++) {
 		for (i = 0; i < 3; i++) {
 			model = glm::rotate(model, glm::radians(base), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -561,26 +536,27 @@ void display2(Shader projectionShader) {
 			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 			model = glm::translate(tmp, glm::vec3(0.0f, 0.17f, 0.05f)); //Tronco
-			model = glm::rotate(model, glm::radians(articulacion1), glm::vec3(-1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(articulacion1), glm::vec3(0.0f, 1.0f, 0.0f));
+			tmp = model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); //Tronco
 			model = glm::scale(model, glm::vec3(0.1f, 0.3f, 0.1f));
 			projectionShader.setMat4("model", model);
 			projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 1.0f));
 			projectionShader.setInt("texture1", t_base);
 			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-			model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 0.1f));//Pantalla
+			model = glm::translate(tmp, glm::vec3(0.0f, -0.05f, 0.1f));//Pantalla
 			model = glm::rotate(model, glm::radians(articulacionmon), glm::vec3(-1.0f, 0.0f, 0.0f));
-			tmp = model = glm::translate(model, glm::vec3(0.0f, 0.35f, 0.0f));
+			tmp = model = glm::translate(model, glm::vec3(0.0f, 0.25f, -0.05f));
 			model = glm::scale(model, glm::vec3(0.6f, 0.4f, 0.05));
 			projectionShader.setMat4("model", model);
 			projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 1.0f));
 			projectionShader.setInt("texture1", t_monitor);
 			glDrawArrays(GL_QUADS, 60, 24);
 
-			tmp = model = glm::translate(tmp, glm::vec3(0.98f, -0.35f, -0.1f));
+			model = glm::translate(glm::mat4(1.0f), glm::vec3((i + 1) + 8.85f, 7.02, temp));
 		}
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(8.85f, 7.02, ((2 * (j + 1)) - 22.6f)));
+		temp = (2 * (j + 1)) - 22.6f;
+		model = glm::translate(glm::mat4(1.0f), glm::vec3(8.85f, 7.02, temp));
 	}
 
 	//CPU
@@ -1383,8 +1359,6 @@ int main()
 	Shader projectionShader("shaders/shader_texture_color.vs", "shaders/shader_texture_color.fs");
 	Shader modelShader("Shaders/modelLoading.vs", "Shaders/modelLoading.fs");
 	// Load models
-	Model ourModel = ((char *)"Models/Lambo/carroseria.obj");
-	Model llantasModel = ((char *)"Models/Lambo/Wheel.obj");
 	Model pisoModel = ((char *)"Models/piso/piso.obj");
 
 
@@ -1409,7 +1383,7 @@ int main()
 		glClearColor(0.0f, 0.95f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		display(modelShader, ourModel, llantasModel, pisoModel);
+		display(modelShader, pisoModel);
 		display2(projectionShader);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
