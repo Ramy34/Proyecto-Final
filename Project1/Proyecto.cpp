@@ -19,7 +19,7 @@ GLFWmonitor *monitors;
 GLuint VBO, VAO, EBO;
 
 //Camera
-Camera camera(glm::vec3(12.0f, 9.0f, -8.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 double	lastX = 0.0f,
 		lastY = 0.0f;
 bool firstMouse = true;
@@ -451,11 +451,15 @@ void display(Shader shader, Model modelo, Model llantas, Model piso)
 	// note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
 	shader.setMat4("projection", projection);
 
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.8f, -1.0f));
-	model = glm::scale(model, glm::vec3(0.007f, 0.007f, 0.007f));
-	shader.setMat4("model", model);
-	piso.Draw(shader);
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.1f, -20.0f));
+	for (i = 0; i < 2; i++) {
+		model = glm::scale(model, glm::vec3(0.007f, 0.007f, 0.007f));
+		shader.setMat4("model", model);
+		piso.Draw(shader);
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 35.0f));
+	}
 
+	/*
 	model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	tmp = model = glm::translate(model, glm::vec3(15.0f, -1.75f, movKit_z));
 	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
@@ -483,7 +487,7 @@ void display(Shader shader, Model modelo, Model llantas, Model piso)
 	model = glm::translate(tmp, glm::vec3(0.85f, 0.25f, -1.45f));
 	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
 	shader.setMat4("model", model);
-	llantas.Draw(shader);	//Izq trase
+	llantas.Draw(shader);	//Izq trase*/
 }
 //Termina la parte del dibujo de modelos -----------------------------------------------------------------------------------------------------------
 
@@ -1405,7 +1409,7 @@ int main()
 		glClearColor(0.0f, 0.95f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//display(modelShader, ourModel, llantasModel, pisoModel);
+		display(modelShader, ourModel, llantasModel, pisoModel);
 		display2(projectionShader);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
