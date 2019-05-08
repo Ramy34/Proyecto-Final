@@ -4,6 +4,9 @@
 #include "SOIL2/SOIL2.h"
 #include "camera.h"
 #include "Model.h"
+#include "esfera.h"
+
+Esfera my_sphere(1.0); //Crea el objeto de la clase esfera
 
 void resize(GLFWwindow* window, int width, int height);
 void my_input(GLFWwindow *window);
@@ -19,7 +22,7 @@ GLFWmonitor *monitors;
 GLuint VBO, VAO, EBO;
 
 //Camera
-Camera camera(glm::vec3(0.0f, 8.0f, -15.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 double	lastX = 0.0f,
 		lastY = 0.0f;
 bool firstMouse = true;
@@ -40,6 +43,10 @@ void animate(void);
 void LoadTextures(void);
 unsigned int generateTextures(char*, bool);
 
+
+//Banderas
+bool flag1 = false,
+	 flag2 = false;
 //For Keyboard
 float	movX = 0.0f,
 		movY = 0.0f,
@@ -71,6 +78,15 @@ unsigned int	t_unam,
 
 //Para ciclos
 int i, j, k;
+int dia = 0;
+//Colores
+float	rojo = 1.0f,
+		verde = 1.0f,
+		azul = 1.0f;
+
+
+//Planeta
+float subir = 0.0f;
 
 float temp = 0.0f;
 
@@ -426,7 +442,33 @@ void animate(void)
 {
 	if (animacion)
 	{
-		articulacion1 += 0.3f;
+		if (flag1) {
+			articulacion1 += 0.5f;
+			if (articulacion1 >= 90.0f) {
+				flag1 = false;
+			}
+		}
+		
+		if (flag1 == false) {
+			articulacion1 -= 0.5f;
+			if (articulacion1 <= 0.0f) {
+				flag1 = true;
+			}
+		}
+
+		if(flag2) {
+			subir += 0.1f;
+			if (subir >= 12.0f) {
+				flag2 = false;
+			}
+		}
+
+		if (flag2 == false) {
+			subir -= 0.1f;
+			if (subir <= 0.0f) {
+				flag2 = true;
+			}
+		}
 	}
 }
 //Termina la parte de a animación ------------------------------------------------------------------------------------------------------------------
@@ -518,12 +560,12 @@ void display2(Shader projectionShader) {
 			projectionShader.setInt("texture1", t_monitor);
 			glDrawArrays(GL_QUADS, 60, 24);
 
-			model = glm::translate(glm::mat4(1.0f), glm::vec3( (i + 1) + 12.26f , 7.02, temp));
+			model = glm::translate(glm::mat4(1.0f), glm::vec3((i + 1) + 12.26f, 7.02, temp));
 		}
 		temp = (2 * (j + 1)) - 22.6f;
-		model = glm::translate(glm::mat4(1.0f), glm::vec3(12.26f, 7.02, temp ));
+		model = glm::translate(glm::mat4(1.0f), glm::vec3(12.26f, 7.02, temp));
 	}
-	
+
 	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(8.85f, 7.02, temp = -22.6f)); //Ubicación del salón
 	for (j = 0; j < 3; j++) {
 		for (i = 0; i < 3; i++) {
@@ -573,7 +615,7 @@ void display2(Shader projectionShader) {
 		}
 		tmp = model = glm::translate(tmp, glm::vec3(-4.0f, 0.0f, 2.0f));
 	}
-	
+
 	model = glm::mat4(1.0f);
 	tmp = model = glm::translate(model, glm::vec3(9.3, 7.35f, -22.5f)); //Ubicación del salón
 	for (j = 0; j < 3; j++) {
@@ -618,9 +660,9 @@ void display2(Shader projectionShader) {
 	}
 
 	//Dibujo del salón de cómputo
-	
+
 	//---------------------------------------------------------------Edificio Derecho-----------------------------------------------------------------------
-	
+
 	//Concreto
 	model = glm::mat4(1.0f);
 	tmp = model = glm::translate(model, glm::vec3(11.0f, 0.0f, 11.0f));
@@ -662,7 +704,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
 	}
 	tmp = model = glm::translate(tmp, glm::vec3(-9.8f, -16.0f, 0.0f));
-	
+
 	for (i = 0; i < 4; i++) {
 		model = glm::scale(model, glm::vec3(0.2f, 3.999f, 8.0f));
 		projectionShader.setMat4("model", model);
@@ -824,7 +866,7 @@ void display2(Shader projectionShader) {
 		}
 		tmp = model = glm::translate(tmp, glm::vec3(-10.0f, 4.0f, 0.0f));
 	}
-	
+
 	model = glm::mat4(1.0f);
 	tmp = model = glm::translate(model, glm::vec3(7.04f, -2.0f, -10.0f));
 	for (i = 0; i < 5; i++) {
@@ -968,7 +1010,7 @@ void display2(Shader projectionShader) {
 		glDrawArrays(GL_QUADS, 48, 4);
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
 	}
-	
+
 	model = glm::mat4(1.0f);
 	tmp = model = glm::translate(model, glm::vec3(-6.0f, -0.0f, 0.0f));
 	for (i = 0; i < 4; i++) {
@@ -1091,7 +1133,7 @@ void display2(Shader projectionShader) {
 		glDrawArrays(GL_QUADS, 132, 4);
 		tmp = model = glm::translate(tmp, glm::vec3(-2.0f, 0.0f, -12.0f));
 	}
-	
+
 
 	//----------------------------------------------------------------------Mesa----------------------------------------------------------------------------
 	model = glm::mat4(1.0f);
@@ -1246,17 +1288,31 @@ void display2(Shader projectionShader) {
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_mesa);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	
+
 	//---------------------------------------------------------------Pizarrón-------------------------------------------------------------------------------
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(12.0f, 8.0f, -24.999f)); //Ubicación del salón
-	//tmp = model = glm::translate(model, glm::vec3(-5.0f, 4.0f, -20.0f));
 	model = glm::scale(model, glm::vec3(5.0f, 2.0f, 0.01f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_pizarron);
 	glDrawArrays(GL_QUADS, 24, 24);
-	
+
+	//-------------------------------------------------------Elevador--------------------------------------------------------------------------------------------
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, subir, -5.0f)); //Ubicación del salón
+	model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_mesa);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 12 - subir, -5.0f)); //Ubicación del salón
+	model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_unam);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
 	glBindVertexArray(0);
 
 }
@@ -1275,8 +1331,11 @@ void my_input(GLFWwindow *window)
 		camera.ProcessKeyboard(LEFT, (float)deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
 		animacion = true;
+		flag2 = flag1 = true;
+	}
+		
 }
 //Termina el uso de las teclas ---------------------------------------------------------------------------------------------------------------------
 
@@ -1380,7 +1439,7 @@ int main()
 
 		// render
 		// Backgound color
-		glClearColor(0.0f, 0.95f, 1.0f, 1.0f);
+		glClearColor(rojo, verde, azul, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		display(modelShader, pisoModel);

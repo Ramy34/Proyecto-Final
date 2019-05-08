@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="esfera.cpp" />
     <ClCompile Include="Proyecto.cpp" />
   </ItemGroup>
   <ItemGroup>

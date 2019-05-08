@@ -29,8 +29,8 @@ void Esfera::init()
 		{
 			// unit sphere
 			x = cos(b)*cos(a);
-			y = sin(b); 
-			z = cos(b)*sin(a);
+			y = cos(b)*sin(a);
+			z = sin(b);
 			esfera_pos[ix + 0] = x * r;
 			esfera_pos[ix + 1] = y * r;
 			esfera_pos[ix + 2] = z * r;
@@ -93,13 +93,13 @@ void Esfera::init()
 
 void Esfera::render()
 {
-	//glEnable(GL_CULL_FACE);
-	//glFrontFace(GL_CCW);
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 
 	glBindVertexArray(esfera_VAO[0]);
-	//glDrawArrays(GL_LINES,0,sizeof(esfera_pos)/sizeof(GLfloat));                   // POINTS ... no indices for debug
-	glDrawElements(GL_TRIANGLES, sizeof(esfera_index) / sizeof(GLuint), GL_UNSIGNED_INT, 0);    // indices (choose just one line not both !!!)
+	//glDrawArrays(GL_POINTS,0,sizeof(esfera_pos)/sizeof(GLfloat));                   // POINTS ... no indices for debug
+	glDrawElements(GL_TRIANGLES, /*sizeof(esfera_index) / sizeof(GLuint)*/0, GL_UNSIGNED_INT, 0);    // indices (choose just one line not both !!!)
 	glBindVertexArray(0);
 }
