@@ -22,7 +22,7 @@ GLFWmonitor *monitors;
 GLuint VBO, VAO, EBO;
 
 //Camera
-Camera camera(glm::vec3(12.0f, 10.0f, -17.0f));
+Camera camera(glm::vec3(12.0f, 9.0f, -17.0f));
 double	lastX = 0.0f,
 		lastY = 0.0f;
 bool firstMouse = true;
