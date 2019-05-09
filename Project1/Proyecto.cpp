@@ -47,8 +47,10 @@ unsigned int generateTextures(char*, bool);
 //Banderas
 bool	flag1 = false,
 		flag2 = false,
+		flag3 = false,
 		animacionCom = false,
-		animacionEle = false;
+		animacionEle = false,
+		animacionAi = false;
 //For Keyboard
 float	movX = 0.0f,
 		movY = 0.0f,
@@ -58,7 +60,9 @@ float	movX = 0.0f,
 float	base = 0.0f,
 		articulacion1 = 0.0f,
 		articulacion2 = 0.0f,
-		articulacionmon = 0.0f;
+		articulacionmon = 0.0f,
+		aire = 0.0f,
+		subir = 0.0f;
 
 //Texture
 unsigned int	t_unam,
@@ -77,25 +81,20 @@ unsigned int	t_unam,
 				t_pared_ven,
 				t_entrada,
 				t_elevador,
+				t_plastico_b,
+				t_cara_ac,
 				t_texture;
 
 //Para ciclos
 int i, j, k;
-int dia = 0;
+
 //Colores
 float	rojo = 1.0f,
 		verde = 1.0f,
 		azul = 1.0f;
 
-
-//Planeta
-float subir = 0.0f;
-
 float temp = 0.0f;
 
-//For model
-bool animacion = false;
-float movKit_z = 0.0f;
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 
 void getResolution()
@@ -163,6 +162,8 @@ void LoadTextures()
 	t_pared_ven = generateTextures("Texturas/Pared_Ventana.png", 1);
 	t_entrada = generateTextures("Texturas/Entrada.png", 1);
 	t_elevador = generateTextures("Texturas/Elevador.png", 1);
+	t_plastico_b = generateTextures("Texturas/pb.png", 1);
+	t_cara_ac = generateTextures("Texturas/cara_aire.png", 1);
 	t_texture = generateTextures("Texturas/awesomeface.png", 1);
 	
 
@@ -219,6 +220,12 @@ void LoadTextures()
 	glBindTexture(GL_TEXTURE_2D, t_elevador);
 
 	glActiveTexture(GL_TEXTURE17);
+	glBindTexture(GL_TEXTURE_2D, t_plastico_b);
+
+	glActiveTexture(GL_TEXTURE18);
+	glBindTexture(GL_TEXTURE_2D, t_cara_ac);
+
+	glActiveTexture(GL_TEXTURE19);
 	glBindTexture(GL_TEXTURE_2D, t_texture);
 }
 //Termina la parte de las texturas -----------------------------------------------------------------------------------------------------------------
@@ -233,10 +240,10 @@ void myData()
 		 0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,
 
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  //Cara Frontal 4
-		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f,  1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  //Cara Frontal 4
+		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  1.0f,
 
 		-0.5f,  0.5f,  0.5f,  1.0f,  0.0f, //Cara Izquierda 8
 		-0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
@@ -288,6 +295,7 @@ void myData()
 		 0.5f,  0.5f, -0.5f,  0.5f,  0.5f,
 		 0.5f,  0.5f,  0.5f,  0.5f,  0.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,
+
 		//Paredes de puertas
 		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f, //48
 		 0.5f,  0.5f,  0.5f,  1.0f,  1.0f,
@@ -334,102 +342,103 @@ void myData()
 		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 		 0.5f,  0.5f,  0.5f,  1.0f, 0.7f,
 		-0.5f,  0.5f,  0.5f,  0.0,  0.7f,
-//Cubo del CPU
-		-0.5f, -0.5f, -0.5f, 0.5f, 0.5f,  //Cara Trasera 84
-		0.5f, -0.5f, -0.5f,  1.0f, 0.5f,
-		0.5f, 0.5f, -0.5f,   1.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f,  0.5f, 0.0f,
 
-		-0.5f, 0.5f, 0.5f,   0.5f, 1.0f,  //Cara Frontal 88
-		 0.5f, 0.5f, 0.5f,   1.0f, 1.0f,
-		 0.5f, -0.5f, 0.5f,  1.0f, 0.5f,
-		-0.5f, -0.5f, 0.5f,  0.5f, 0.5f,
+		//Cubo del CPU
+		-0.5f, -0.5f, -0.5f,  0.5f, 0.5f,  //Cara Trasera 84
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.5f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.5f, 0.0f,
 
-		-0.5f, 0.5f, -0.5f,  0.0f, 1.0f, //Cara Izquierda 92
-		-0.5f, 0.5f,  0.5f,  0.5f, 1.0f,
-		-0.5f, -0.5f, 0.5f,  0.5f, 0.5f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.5f,
+		-0.5f,  0.5f,  0.5f,  0.5f, 1.0f,  //Cara Frontal 88
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.5f,
+		-0.5f, -0.5f,  0.5f,  0.5f, 0.5f,
 
-		0.5f, 0.5f, 0.5f,    0.0f, 1.0f,  //Cara Derecha 96
-		0.5f, 0.5f, -0.5f,   0.5f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.5f, 0.5f,
-		0.5f, -0.5f, 0.5f,   0.0f, 0.5f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, //Cara Izquierda 92
+		-0.5f,  0.5f,  0.5f,  0.5f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.5f, 0.5f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.5f,
 
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,  //Cara Inferior 100
-		0.5f, -0.5f, -0.5f,  0.5f, 1.0f,
-		0.5f, -0.5f, 0.5f,   0.5f, 0.5f,
-		-0.5f, -0.5f, 0.5f,  0.0f, 0.5f,
+		 0.5f,  0.5f,  0.5f,  0.0f, 1.0f,  //Cara Derecha 96
+		 0.5f,  0.5f, -0.5f,  0.5f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.5f, 0.5f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.5f,
 
-		-0.5f, 0.5f, -0.5f,  0.0f, 1.0f,  //Cara Superior 104
-		0.5f, 0.5f, -0.5f,   0.5f, 1.0f,
-		0.5f, 0.5f, 0.5f,    0.5f, 0.5f,
-		-0.5f, 0.5f, 0.5f,   0.0f, 0.5f,
-//Piso_Techo
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.5f,  //Cara Trasera 108
-		 0.5f, -0.5f, -0.5f, 1.0f, 0.5f,
-		 0.5f, 0.5f, -0.5f,  1.0f, 0.0f,
-		 -0.5f, 0.5f, -0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  //Cara Inferior 100
+		 0.5f, -0.5f, -0.5f,  0.5f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.5f, 0.5f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.5f,
 
-		 -0.5f, 0.5f, 0.5f,  0.0f, 0.5f,  //Cara Frontal 112
-		 0.5f, 0.5f, 0.5f,   1.0f, 0.5f,
-		 0.5f, -0.5f, 0.5f,  1.0f, 0.0f,
-		 -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  //Cara Superior 104
+		 0.5f,  0.5f, -0.5f,  0.5f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  0.5f, 0.5f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.5f,
+	//Piso_Techo
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.5f,  //Cara Trasera 108
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.5f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 0.0f,
 
-		 -0.5f, 0.5f, -0.5f, 0.0f, 0.5f, //Cara Izquierda 116
-		 -0.5f, 0.5f, 0.5f,  1.0f, 0.5f,
-		 -0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		 -0.5f, -0.5f, -0.5f,0.0f, 0.0f,
+		 -0.5f,  0.5f, 0.5f,  0.0f, 0.5f,  //Cara Frontal 112
+		  0.5f,  0.5f, 0.5f,  1.0f, 0.5f,
+		  0.5f, -0.5f, 0.5f,  1.0f, 0.0f,
+		 -0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
 
-		 0.5f, 0.5f, 0.5f,   0.0f, 0.5f,  //Cara Derecha 120
-		 0.5f, 0.5f, -0.5f,  1.0f, 0.5f,
-		 0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-		 0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
+		 -0.5f,  0.5f, -0.5f, 0.0f, 0.5f, //Cara Izquierda 116
+		 -0.5f,  0.5f,  0.5f, 1.0f, 0.5f,
+		 -0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
+		 -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+
+		  0.5f,  0.5f,  0.5f, 0.0f, 0.5f,  //Cara Derecha 120
+		  0.5f,  0.5f, -0.5f, 1.0f, 0.5f,
+		  0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		  0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
 
 		 -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,  //Cara Inferior 124
-		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f, 0.5f,   1.0f, 0.5f,
-		 -0.5f, -0.5f, 0.5f,  0.0f, 0.5f,
+		  0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+		  0.5f, -0.5f,  0.5f, 1.0f, 0.5f,
+		 -0.5f, -0.5f,  0.5f, 0.0f, 0.5f,
 
-		 -0.5f, 0.5f, -0.5f,  0.0f, 0.5f,  //Cara Superior 128
-		 0.5f, 0.5f, -0.5f,   1.0f, 0.5f,
-		 0.5f, 0.5f, 0.5f,    1.0f, 0.0f,
-		 -0.5f, 0.5f, 0.5f,   0.0f, 0.0f,
+		 -0.5f,  0.5f, -0.5f, 0.0f, 0.5f,  //Cara Superior 128
+		  0.5f,  0.5f, -0.5f, 1.0f, 0.5f,
+		  0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
+		 -0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
 
-		-0.5f, 0.5f, -0.5f,  0.0f, 1.0f, //Cara Trasera 132
-		 0.5f, 0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,  
+		 -0.5f,  0.5f, -0.5f, 0.0f, 1.0f, //Cara Trasera 132
+		  0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
+		  0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		 -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,  
+
 		 //Elevador
-		-0.5f, -0.5f, -0.5f, 0.5f, 1.0f,  //Cara Trasera 136
-		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f, 0.5f, -0.5f,   1.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f,  0.5f, 0.0f,
+		 -0.5f, -0.5f, -0.5f, 0.5f, 1.0f,  //Cara Trasera 136
+		  0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+		  0.5f,  0.5f, -0.5f, 1.0f, 0.0f,
+		 -0.5f,  0.5f, -0.5f, 0.5f, 0.0f,
 
-		0.5f, 0.5f, 0.5f,    0.0f, 1.0f,//Cara Frontal 140
-		-0.5f, 0.5f, 0.5f,   0.5f, 1.0f,
-		-0.5f, -0.5f, 0.5f,  0.5f, 0.0f,  
-		0.5f, -0.5f, 0.5f,   0.0f, 0.0f,
+		  0.5f,  0.5f, 0.5f,  0.0f, 1.0f,//Cara Frontal 140
+		 -0.5f,  0.5f, 0.5f,  0.5f, 1.0f,
+		 -0.5f, -0.5f, 0.5f,  0.5f, 0.0f,  
+		  0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
 
-		-0.5f, 0.5f, 0.5f,   0.5f, 1.0f, //Cara Izquierda 148
-		-0.5f, 0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-		-0.5f, -0.5f, 0.5f,  0.5f, 0.0f,
+		 -0.5f,  0.5f,  0.5f, 0.5f, 1.0f, //Cara Izquierda 148
+		 -0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
+		 -0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		 -0.5f, -0.5f,  0.5f, 0.5f, 0.0f,
 
-		0.5f, 0.5f, 0.5f,    0.5f, 1.0f,  //Cara Derecha 152
-		0.5f, 0.5f, -0.5f,   1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		0.5f, -0.5f, 0.5f,   0.5f, 0.0f,
+		  0.5f,  0.5f,  0.5f, 0.5f, 1.0f,  //Cara Derecha 152
+	 	  0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
+		  0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		  0.5f, -0.5f,  0.5f, 0.5f, 0.0f,
 
-		-0.5f, -0.5f, -0.5f, 0.5f, 1.0f,  //Cara Inferior 156
-		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f, -0.5f, 0.5f,   1.0f, 0.0f,
-		-0.5f, -0.5f, 0.5f,  0.5f, 0.0f,
+		 -0.5f, -0.5f, -0.5f, 0.5f, 1.0f,  //Cara Inferior 156
+		  0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+		  0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
+		 -0.5f, -0.5f,  0.5f, 0.5f, 0.0f,
 
-		-0.5f, 0.5f, -0.5f,  0.5f, 1.0f,  //Cara Superior 160
-		0.5f, 0.5f, -0.5f,   1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f,    1.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f,   0.5f, 0.0f,
-		
+		 -0.5f, 0.5f, -0.5f,  0.5f, 1.0f,  //Cara Superior 160
+		  0.5f, 0.5f, -0.5f,  1.0f, 1.0f,
+		  0.5f, 0.5f,  0.5f,  1.0f, 0.0f,
+		 -0.5f, 0.5f,  0.5f,  0.5f, 0.0f,
 	};
 
 	unsigned int indices[] = {
@@ -510,6 +519,23 @@ void animate(void)
 				flag2 = true;
 			}
 		}
+	}
+
+	//Animación del aire acondicionado
+	if (animacionAi) {
+		if (flag3) {
+			aire += 0.2;
+			if (aire >= 90) {
+				flag3 = false;
+			}
+		}
+		else {
+			aire -= 0.2;
+			if (aire <= 0) {
+				flag3 = true;
+			}
+		}
+	
 	}
 }
 //Termina la parte de a animación ------------------------------------------------------------------------------------------------------------------
@@ -788,7 +814,6 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(8.97f, 6.35f, -21.47f + 2 * (i + 1)));
 	}
 
-
 	//---------------------------------------------------------------Edificio Derecho-----------------------------------------------------------------------
 
 	//Concreto
@@ -1046,9 +1071,7 @@ void display2(Shader projectionShader) {
 
 	//------------------------------------------------------------------Edificio Izquierdo------------------------------------------------------------------
 	//Paredes que dividen los salones
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-12.0f, 0.0f, -3.0f));
-
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-12.0f, 0.0f, -3.0f));
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 4; j++) {
 			model = glm::scale(model, glm::vec3(7.95f, 3.99f, 0.01f));
@@ -1060,9 +1083,9 @@ void display2(Shader projectionShader) {
 		}
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, -24.0f));
 	}
+	
 	//Pared que da a los pasillos
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-7.975f, 0.0f, -7.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-7.975f, 0.0f, -7.0f));
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 4; j++) {
 			model = glm::scale(model, glm::vec3(0.1f, 4.0f, 4.0f));
@@ -1076,8 +1099,7 @@ void display2(Shader projectionShader) {
 	}
 
 	//Techo_Piso
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-7.0f, -2.0f, -6.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-7.0f, -2.0f, -6.0f));
 	for (k = 0; k < 5; k++) {
 		for (i = 0; i < 5; i++) {
 			for (j = 0; j < 5; j++) {
@@ -1092,9 +1114,9 @@ void display2(Shader projectionShader) {
 		}
 		tmp = model = glm::translate(tmp, glm::vec3(-2.0f, -20.0f, -0.0f));
 	}
+	
 	//Ventanas
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-16.0f, -0.0f, -6.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-16.0f, -0.0f, -6.0f));
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 5; j++) {
 			model = glm::scale(model, glm::vec3(0.01f, 4.0f, 6.0f));
@@ -1107,8 +1129,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, -30.0f));
 	}
 
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-6.0f, -0.0f, 18.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-6.0f, -0.0f, 18.0f));
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 3; j++) {
 			model = glm::scale(model, glm::vec3(0.01f, 4.0f, 6.0f));
@@ -1121,8 +1142,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 18.0f));
 	}
 
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-6.0f, -0.0f, -6.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-6.0f, -0.0f, -6.0f));
 	for (i = 0; i < 4; i++) {
 		model = glm::scale(model, glm::vec3(0.01f, 4.0f, 6.0f));
 		projectionShader.setMat4("model", model);
@@ -1132,8 +1152,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
 	}
 
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-6.0f, -0.0f, 0.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-6.0f, -0.0f, 0.0f));
 	for (i = 0; i < 4; i++) {
 		model = glm::scale(model, glm::vec3(0.01f, 4.0f, 6.0f));
 		projectionShader.setMat4("model", model);
@@ -1144,8 +1163,7 @@ void display2(Shader projectionShader) {
 	}
 
 	//Cemento
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-11.0f, 0.0f, 21.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-11.0f, 0.0f, 21.0f));
 	for (i = 0; i < 4; i++) {
 		model = glm::scale(model, glm::vec3(10.0f, 4.0f, 0.01f));
 		projectionShader.setMat4("model", model);
@@ -1161,10 +1179,10 @@ void display2(Shader projectionShader) {
 		glDrawArrays(GL_QUADS, 0, 4);
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 30.0f));
 	}
+	
 	//------------------------------------------------------------Edificio Central--------------------------------------------------------------------------
 	//Piso_Techo
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-5.0f, -2.0f, 3.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, -2.0f, 3.0f));
 	for (k = 0; k < 5; k++) {
 		for (j = 0; j < 6; j++) {
 			for (i = 0; i < 2; i++) {
@@ -1181,17 +1199,14 @@ void display2(Shader projectionShader) {
 	}
 
 	//Paredes
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 6.0f));
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 6.0f));
 	model = glm::scale(model, glm::vec3(4.0f, 4.0f, 0.01f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_entrada);
 	glDrawArrays(GL_QUADS, 132, 4);
 
-
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(1.0f, 0.0f, -6.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, -6.0f));
 	for (i = 0; i < 2; i++) {
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 0.01f));
 		projectionShader.setMat4("model", model);
@@ -1201,8 +1216,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(-2.0f, 0.0f, 0.0f));
 	}
 
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-5.0f, 4.0f, -6.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, 4.0f, -6.0f));
 	for (j = 0; j < 3; j++) {
 		for (i = 0; i < 6; i++) {
 			model = glm::scale(model, glm::vec3(2.0f, 4.0f, 0.01f));
@@ -1221,8 +1235,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(-12.0f, 4.0f, 0.0f));
 	}
 
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(-5.0f, 0.0f, -6.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, 0.0f, -6.0f));
 	for (i = 0; i < 2; i++) {
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 0.01f));
 		projectionShader.setMat4("model", model);
@@ -1238,8 +1251,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(2.0f, 0.0f, -12.0f));
 	}
 
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(5.0f, 0.0f, -6.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, -6.0f));
 	for (i = 0; i < 2; i++) {
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 0.01f));
 		projectionShader.setMat4("model", model);
@@ -1255,164 +1267,130 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(-2.0f, 0.0f, -12.0f));
 	}
 
-
 	//----------------------------------------------------------------------Mesa----------------------------------------------------------------------------
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(14.0f, 6.99f, -22.5f)); //Ubicación del salón
-
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(14.0f, 6.99f, -22.5f)); //Ubicación del salón
 	for (j = 0; j < 3; j++) {
-		tmp = model;
 		model = glm::scale(model, glm::vec3(3.98f, 0.01f, 1.0f));
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_mesa);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		model = tmp;
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 2.0f));
 	}
-	model = glm::translate(model, glm::vec3(-4.0f, 0.0f, -6.0f));
+	tmp = model = glm::translate(model, glm::vec3(-4.0f, 0.0f, -6.0f));
 
 	for (j = 0; j < 3; j++) {
-		tmp = model;
 		model = glm::scale(model, glm::vec3(3.0f, 0.01f, 1.0f));
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_mesa);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		model = tmp;
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 2.0f));
 	}
 
 	//--------------------------------------------------------------------Patas mesa------------------------------------------------------------------------
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(12.25f, 6.5f, -22.125f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(12.25f, 6.5f, -22.125f));
 	for (j = 0; j < 3; j++) {
-		tmp = model;
 		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_patas);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		model = tmp;
 
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.8f));
-		tmp = model;
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, -0.8f));
 		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_patas);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		model = tmp;
 
-		model = glm::translate(model, glm::vec3(3.5f, 0.0f, 0.0f));
-		tmp = model;
+		tmp = model = glm::translate(tmp, glm::vec3(3.5f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_patas);
 		projectionShader.setMat4("model", model);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		model = tmp;
 
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.8f));
-		tmp = model;
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 0.8f));
 		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_patas);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		model = tmp;
 
-		model = glm::translate(model, glm::vec3(-3.5f, 0.0f, 2.0f));
+		tmp = model = glm::translate(tmp, glm::vec3(-3.5f, 0.0f, 2.0f));
 	}
 
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(8.75f, 6.5f, -22.125f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(8.75f, 6.5f, -22.125f));
 	for (j = 0; j < 3; j++) {
-		tmp = model;
 		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_patas);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		model = tmp;
 
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.8f));
-		tmp = model;
+		tmp =model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, -0.8f));
 		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_patas);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		model = tmp;
 
-		model = glm::translate(model, glm::vec3(2.5f, 0.0f, 0.0f));
-		tmp = model;
+		tmp = model = glm::translate(tmp, glm::vec3(2.5f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_patas);
 		projectionShader.setMat4("model", model);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		model = tmp;
 
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.8f));
-		tmp = model;
+		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 0.8f));
 		model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
 		projectionShader.setMat4("model", model);
 		projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 		projectionShader.setInt("texture1", t_patas);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		model = tmp;
 
-		model = glm::translate(model, glm::vec3(-2.5f, 0.0f, 2.0f));
+		tmp = model = glm::translate(tmp, glm::vec3(-2.5f, 0.0f, 2.0f));
 	}
 
-	//--------------------------------------------------------------------------Escritorio------------------------------------------------------------------
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(14.125f, 6.5f, -23.6f));
-	tmp = model;
-	model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
-	projectionShader.setMat4("model", model);
-	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_patas);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	model = tmp;
-
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.8f));
-	tmp = model;
-	model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
-	projectionShader.setMat4("model", model);
-	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_patas);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	model = tmp;
-
-	model = glm::translate(model, glm::vec3(1.7f, 0.0f, 0.0f));
-	tmp = model;
-	model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
-	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_patas);
-	projectionShader.setMat4("model", model);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	model = tmp;
-
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.8f));
+	//--------------------------------------------------------------------------Escritorio----------------------------------------------------------------
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(14.125f, 6.5f, -23.6f));
 	model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_patas);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(15.0f, 6.99f, -24.0f));
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, -0.8f));
+	model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_patas);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(1.7f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_patas);
+	projectionShader.setMat4("model", model);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 0.8f));
+	model = glm::scale(model, glm::vec3(0.125f, 0.98f, 0.125f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_patas);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 6.99f, -24.0f));
 	model = glm::scale(model, glm::vec3(1.98f, 0.01f, 1.0f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
 	projectionShader.setInt("texture1", t_mesa);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-	//---------------------------------------------------------------Pizarrón-------------------------------------------------------------------------------
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(12.0f, 8.0f, -24.999f)); //Ubicación del salón
+	//---------------------------------------------------------------Pizarrón-----------------------------------------------------------------------------
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(12.0f, 8.0f, -24.999f)); //Ubicación del salón
 	model = glm::scale(model, glm::vec3(5.0f, 2.0f, 0.01f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
@@ -1434,6 +1412,52 @@ void display2(Shader projectionShader) {
 	projectionShader.setInt("texture1", t_elevador);
 	glDrawArrays(GL_QUADS, 136, 24);
 
+	//-------------------------------------------------------aire acondicionado------------------------------------------------------------------------------------------
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(16.01f, 9.5f, -20.999f));
+
+	model = glm::rotate(model, glm::radians(aire), glm::vec3(0.0f, 0.0f, 1.0f));
+	tmp = model = glm::translate(model, glm::vec3(-0.1f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.2f, 0.02f, 0.8f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 1.0f));
+	projectionShader.setInt("texture1", t_plastico_b);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(16.015f, 9.58f, -20.999f)); //parte de atras
+	model = glm::scale(model, glm::vec3(0.02f, 0.2f, 0.8f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_plastico_b);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(15.92f, 9.68f, -20.999f)); //parte de arriba
+	model = glm::scale(model, glm::vec3(0.2f, 0.02f, 0.8f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_plastico_b);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(15.82f, 9.58f, -20.999f)); //parte de enfrente
+	model = glm::scale(model, glm::vec3(0.02f, 0.2f, 0.8f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_cara_ac);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(15.92f, 9.58f, -21.299f)); //parte de la izquierda
+	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.02f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_plastico_b);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(15.92f, 9.58f, -20.699f)); //parte de la derecha
+	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.02f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_plastico_b);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
 	glBindVertexArray(0);
 
 }
@@ -1452,14 +1476,14 @@ void my_input(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, (float)deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
-		animacionCom = true;
-		flag1 = true;
+		animacionCom = flag1 = true;
 	}
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-		animacionEle = true;
+		animacionEle = flag2 = true;
+
 	}
-	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-		animacionEle = false;
+	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+		animacionAi = flag3 = true;
 	}
 }
 //Termina el uso de las teclas ---------------------------------------------------------------------------------------------------------------------
