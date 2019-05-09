@@ -74,6 +74,7 @@ unsigned int	t_unam,
 				t_piso_techo,
 				t_pared_ven,
 				t_entrada,
+				t_elevador,
 				t_texture;
 
 //Para ciclos
@@ -159,6 +160,7 @@ void LoadTextures()
 	t_piso_techo = generateTextures("Texturas/Piso_Techo.png", 1);
 	t_pared_ven = generateTextures("Texturas/Pared_Ventana.png", 1);
 	t_entrada = generateTextures("Texturas/Entrada.png", 1);
+	t_elevador = generateTextures("Texturas/Elevador.png", 1);
 	t_texture = generateTextures("Texturas/awesomeface.png", 1);
 	
 
@@ -212,6 +214,9 @@ void LoadTextures()
 	glBindTexture(GL_TEXTURE_2D, t_entrada);
 
 	glActiveTexture(GL_TEXTURE16);
+	glBindTexture(GL_TEXTURE_2D, t_elevador);
+
+	glActiveTexture(GL_TEXTURE17);
 	glBindTexture(GL_TEXTURE_2D, t_texture);
 }
 //Termina la parte de las texturas -----------------------------------------------------------------------------------------------------------------
@@ -392,8 +397,36 @@ void myData()
 		 0.5f, 0.5f, -0.5f,  1.0f, 1.0f,
 		 0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
 		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,  
-		 
-		 
+		 //Elevador
+		-0.5f, -0.5f, -0.5f, 0.5f, 1.0f,  //Cara Trasera 136
+		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		0.5f, 0.5f, -0.5f,   1.0f, 0.0f,
+		-0.5f, 0.5f, -0.5f,  0.5f, 0.0f,
+
+		0.5f, 0.5f, 0.5f,    0.5f, 0.0f,//Cara Frontal 140
+		-0.5f, 0.5f, 0.5f,   0.0f, 0.0f,
+		-0.5f, -0.5f, 0.5f,  0.0f, 1.0f,  
+		0.5f, -0.5f, 0.5f,   0.5f, 1.0f,
+
+		-0.5f, 0.5f, 0.5f,   0.5f, 1.0f, //Cara Izquierda 148
+		-0.5f, 0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.5f,  0.5f, 0.0f,
+
+		0.5f, 0.5f, 0.5f,    0.5f, 1.0f,  //Cara Derecha 152
+		0.5f, 0.5f, -0.5f,   1.0f, 1.0f,
+		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		0.5f, -0.5f, 0.5f,   0.5f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f, 0.5f, 1.0f,  //Cara Inferior 156
+		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		0.5f, -0.5f, 0.5f,   1.0f, 0.0f,
+		-0.5f, -0.5f, 0.5f,  0.5f, 0.0f,
+
+		-0.5f, 0.5f, -0.5f,  0.5f, 1.0f,  //Cara Superior 160
+		0.5f, 0.5f, -0.5f,   1.0f, 1.0f,
+		0.5f, 0.5f, 0.5f,    1.0f, 0.0f,
+		-0.5f, 0.5f, 0.5f,   0.5f, 0.0f,
 		
 	};
 
@@ -1303,15 +1336,15 @@ void display2(Shader projectionShader) {
 	model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_mesa);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	projectionShader.setInt("texture1", t_elevador);
+	glDrawArrays(GL_QUADS, 136, 24);
 
 	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 12 - subir, -5.0f)); //Ubicación del salón
 	model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
 	projectionShader.setMat4("model", model);
 	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-	projectionShader.setInt("texture1", t_unam);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	projectionShader.setInt("texture1", t_elevador);
+	glDrawArrays(GL_QUADS, 136, 24);
 
 	glBindVertexArray(0);
 
