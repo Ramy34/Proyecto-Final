@@ -45,8 +45,10 @@ unsigned int generateTextures(char*, bool);
 
 
 //Banderas
-bool flag1 = false,
-	 flag2 = false;
+bool	flag1 = false,
+		flag2 = false,
+		animacionCom = false,
+		animacionEle = false;
 //For Keyboard
 float	movX = 0.0f,
 		movY = 0.0f,
@@ -403,10 +405,10 @@ void myData()
 		0.5f, 0.5f, -0.5f,   1.0f, 0.0f,
 		-0.5f, 0.5f, -0.5f,  0.5f, 0.0f,
 
-		0.5f, 0.5f, 0.5f,    0.5f, 0.0f,//Cara Frontal 140
-		-0.5f, 0.5f, 0.5f,   0.0f, 0.0f,
-		-0.5f, -0.5f, 0.5f,  0.0f, 1.0f,  
-		0.5f, -0.5f, 0.5f,   0.5f, 1.0f,
+		0.5f, 0.5f, 0.5f,    0.0f, 1.0f,//Cara Frontal 140
+		-0.5f, 0.5f, 0.5f,   0.5f, 1.0f,
+		-0.5f, -0.5f, 0.5f,  0.5f, 0.0f,  
+		0.5f, -0.5f, 0.5f,   0.0f, 0.0f,
 
 		-0.5f, 0.5f, 0.5f,   0.5f, 1.0f, //Cara Izquierda 148
 		-0.5f, 0.5f, -0.5f,  1.0f, 1.0f,
@@ -473,32 +475,38 @@ void myData()
 
 void animate(void)
 {
-	if (animacion)
-	{
+	//Animación de las computadoras
+	if (animacionCom) {
 		if (flag1) {
 			articulacion1 += 0.5f;
 			if (articulacion1 >= 90.0f) {
 				flag1 = false;
 			}
 		}
-		
-		if (flag1 == false) {
+		else {
 			articulacion1 -= 0.5f;
 			if (articulacion1 <= 0.0f) {
 				flag1 = true;
 			}
 		}
-
+	}
+	//Animación del elevador
+	if (animacionEle){	
 		if(flag2) {
 			subir += 0.1f;
-			if (subir >= 12.0f) {
+			if (subir == 4.0f || subir == 8.0f || subir == 12.0f) {
+				animacionEle = false;
+			}
+			if (subir > 12.0f) {
 				flag2 = false;
 			}
 		}
-
-		if (flag2 == false) {
+		else {
 			subir -= 0.1f;
-			if (subir <= 0.0f) {
+			if (subir == 0.0f || subir == 4.0f || subir == 8.0f) {
+				animacionEle = false;
+			}
+			if (subir < 0.0f) {
 				flag2 = true;
 			}
 		}
@@ -1355,7 +1363,6 @@ void my_input(GLFWwindow *window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, (float)deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -1364,11 +1371,16 @@ void my_input(GLFWwindow *window)
 		camera.ProcessKeyboard(LEFT, (float)deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-		animacion = true;
-		flag2 = flag1 = true;
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+		animacionCom = true;
+		flag1 = true;
 	}
-		
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		animacionEle = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
+		animacionEle = false;
+	}
 }
 //Termina el uso de las teclas ---------------------------------------------------------------------------------------------------------------------
 
