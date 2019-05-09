@@ -22,7 +22,7 @@ GLFWmonitor *monitors;
 GLuint VBO, VAO, EBO;
 
 //Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+Camera camera(glm::vec3(12.0f, 10.0f, -17.0f));
 double	lastX = 0.0f,
 		lastY = 0.0f;
 bool firstMouse = true;
@@ -541,12 +541,6 @@ void display(Shader shader, Model piso)
 		piso.Draw(shader);
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 35.0f));
 	}
-
-	//model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//tmp = model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0));
-	//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-	//shader.setMat4("model", model);
-	//arbol.Draw(shader);
 }
 //Termina la parte del dibujo de modelos -----------------------------------------------------------------------------------------------------------
 
@@ -572,6 +566,7 @@ void display2(Shader projectionShader) {
 
 	glBindVertexArray(VAO);
 	//-----------------------------------------------------------------Computadora--------------------------------------------------------------------------
+	//Dibujo del salón de cómputo
 	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(12.26f, 7.02, temp = -22.6f));//Ubicación del salón
 	for (j = 0; j < 3; j++) {
 		for (i = 0; i < 4; i++) {
@@ -643,8 +638,7 @@ void display2(Shader projectionShader) {
 	}
 
 	//CPU
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(12.71f, 7.35f, -22.5f)); //Ubicación del salón
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(12.71f, 7.35f, -22.5f)); //Ubicación del salón
 	for (j = 0; j < 3; j++) {
 		for (i = 0; i < 4; i++) {
 			model = glm::scale(model, glm::vec3(0.28f, 0.725f, 0.5f));
@@ -657,8 +651,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(-4.0f, 0.0f, 2.0f));
 	}
 
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(9.3, 7.35f, -22.5f)); //Ubicación del salón
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(9.3, 7.35f, -22.5f)); //Ubicación del salón
 	for (j = 0; j < 3; j++) {
 		for (i = 0; i < 3; i++) {
 			model = glm::scale(model, glm::vec3(0.28f, 0.725f, 0.5f));
@@ -672,8 +665,7 @@ void display2(Shader projectionShader) {
 	}
 
 	//Teclado
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(12.4f, 7.0f, -22.1f)); //Ubicación del salón
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(12.4f, 7.0f, -22.1f)); //Ubicación del salón
 	for (j = 0; j < 3; j++) {
 		for (i = 0; i < 4; i++) {
 			model = glm::scale(model, glm::vec3(0.7f, 0.005f, 0.2f));
@@ -686,8 +678,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(-4.0f, 0.0f, 2.0f));
 	}
 
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(9.1f, 7.0f, -22.1f)); //Ubicación del salón
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(9.1f, 7.0f, -22.1f)); //Ubicación del salón
 	for (j = 0; j < 3; j++) {
 		for (i = 0; i < 3; i++) {
 			model = glm::scale(model, glm::vec3(0.7f, 0.005f, 0.2f));
@@ -699,14 +690,109 @@ void display2(Shader projectionShader) {
 		}
 		tmp = model = glm::translate(tmp, glm::vec3(-3.0f, 0.0f, 2.0f));
 	}
+	
+	//Sillas
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(9.1f, 6.65f, -21.6f)); //Ubicación del salón
+	for (j = 0; j < 3; j++) {
+		for (i = 0; i < 3; i++) {
+			model = glm::scale(model, glm::vec3(0.3f, 0.05f, 0.3f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_mesa);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+			tmp = model = glm::translate(tmp, glm::vec3(0.9f, 0.0f, 0.0f));
+		}
+		tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(9.1f, 6.65f, -21.6f + 2 * (j + 1) ));
+	}
+	
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(12.5f, 6.65f, -21.6f)); //Ubicación del salón
+	for (j = 0; j < 3; j++) {
+		for (i = 0; i < 4; i++) {
+			model = glm::scale(model, glm::vec3(0.3f, 0.05f, 0.3f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_mesa);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+			tmp = model = glm::translate(tmp, glm::vec3(0.9f, 0.0f, 0.0f));
+		}
+		tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(12.5f, 6.65f, -21.6f + 2 * (j + 1)));
+	}
+	//Patas de la silla
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(12.38f, 6.35f, -21.47f));
+	for (i = 0; i < 3; i++) {
+		for (j = 0; j < 4; j++) {
+			model = glm::scale(model, glm::vec3(0.025f, 0.55f, 0.025f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_patas);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-	//Dibujo del salón de cómputo
+			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, -0.25f));
+			model = glm::scale(model, glm::vec3(0.025f, 0.55f, 0.025f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_patas);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+			tmp = model = glm::translate(tmp, glm::vec3(0.25f, 0.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(0.025f, 0.55f, 0.025f));
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_patas);
+			projectionShader.setMat4("model", model);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 0.25f));
+			model = glm::scale(model, glm::vec3(0.025f, 0.55f, 0.025f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_patas);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+			tmp = model = glm::translate(tmp, glm::vec3(0.65f, 0.0f, 0.0f));
+		}
+		tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(12.38f, 6.35f, -21.47f + 2*(i+1)));
+	}
+
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(8.97f, 6.35f, -21.47f));
+	for (i = 0; i < 3; i++) {
+		for (j = 0; j < 3; j++) {
+			model = glm::scale(model, glm::vec3(0.025f, 0.55f, 0.025f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_patas);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, -0.25f));
+			model = glm::scale(model, glm::vec3(0.025f, 0.55f, 0.025f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_patas);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+			tmp = model = glm::translate(tmp, glm::vec3(0.25f, 0.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(0.025f, 0.55f, 0.025f));
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_patas);
+			projectionShader.setMat4("model", model);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+			tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 0.25f));
+			model = glm::scale(model, glm::vec3(0.025f, 0.55f, 0.025f));
+			projectionShader.setMat4("model", model);
+			projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+			projectionShader.setInt("texture1", t_patas);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+			tmp = model = glm::translate(tmp, glm::vec3(0.65f, 0.0f, 0.0f));
+		}
+		tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(8.97f, 6.35f, -21.47f + 2 * (i + 1)));
+	}
+
 
 	//---------------------------------------------------------------Edificio Derecho-----------------------------------------------------------------------
 
 	//Concreto
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(11.0f, 0.0f, 11.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(11.0f, 0.0f, 11.0f));
 	for (i = 0; i < 2; i++) {
 		for (j = 0; j < 4; j++) {
 			model = glm::scale(model, glm::vec3(10.0f, 4.0f, 0.1f));
@@ -720,8 +806,7 @@ void display2(Shader projectionShader) {
 	}
 
 	//Ventanas
-	model = glm::mat4(1.0f);//Primer Salón
-	tmp = model = glm::translate(model, glm::vec3(15.94f, 0.0f, 6.5f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(15.94f, 0.0f, 6.5f));
 	for (i = 0; i < 2; i++) {
 		for (j = 0; j < 4; j++) {
 			model = glm::scale(model, glm::vec3(0.2f, 4.0f, 9.0f));
@@ -734,8 +819,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(-10.0f, -16.0f, 0.0f));
 	}
 
-	model = glm::mat4(1.0f); //Segundo Salón
-	tmp = model = glm::translate(model, glm::vec3(15.94f, 0.0f, -2.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(15.94f, 0.0f, -2.0f));
 	for (i = 0; i < 4; i++) {
 		model = glm::scale(model, glm::vec3(0.2f, 4.0f, 8.0f));
 		projectionShader.setMat4("model", model);
@@ -755,8 +839,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(0.0f, 4.0f, 0.0f));
 	}
 
-	model = glm::mat4(1.0f); //Salón central
-	tmp = model = glm::translate(model, glm::vec3(15.94f, 0.0f, -10.5f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(15.94f, 0.0f, -10.5f));
 	for (i = 0; i < 2; i++) {
 		for (j = 0; j < 4; j++) {
 			model = glm::scale(model, glm::vec3(0.2f, 4.0f, 9.0f));
@@ -769,8 +852,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(-10.0f, -16.0f, 0.0f));
 	}
 
-	model = glm::mat4(1.0f); //Salón del laboratorio
-	tmp = model = glm::translate(model, glm::vec3(15.94f, 0.0f, -20.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(15.94f, 0.0f, -20.0f));
 	for (i = 0; i < 2; i++) {
 		for (j = 0; j < 4; j++) {
 			model = glm::scale(model, glm::vec3(0.2f, 4.0f, 10.0f));
@@ -783,8 +865,7 @@ void display2(Shader projectionShader) {
 		tmp = model = glm::translate(tmp, glm::vec3(-10.0f, -16.0f, 0.0f));
 	}
 
-	model = glm::mat4(1.0f);//último salón
-	tmp = model = glm::translate(model, glm::vec3(15.94f, 0.0f, -29.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(15.94f, 0.0f, -29.0f));
 	for (i = 0; i < 2; i++) {
 		for (j = 0; j < 4; j++) {
 			model = glm::scale(model, glm::vec3(0.2f, 4.0f, 8.0f));
@@ -798,8 +879,7 @@ void display2(Shader projectionShader) {
 	}
 
 	//Pared que da a los pasillos
-	model = glm::mat4(1.0f);
-	tmp = model = glm::translate(model, glm::vec3(8.2f, 0.0f, -21.0f));
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(8.2f, 0.0f, -21.0f));
 	for (i = 0; i < 4; i++) {
 		model = glm::scale(model, glm::vec3(0.15f, 4.0f, 8.0f));
 		projectionShader.setMat4("model", model);
