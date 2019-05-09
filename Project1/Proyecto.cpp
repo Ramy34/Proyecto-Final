@@ -47,10 +47,12 @@ unsigned int generateTextures(char*, bool);
 //Banderas
 bool	flag1 = false,
 		flag2 = false,
-		flag3 = false,
+		flag3 = true,
+		flag4 = true,
 		animacionCom = false,
 		animacionEle = false,
-		animacionAi = false;
+		animacionAi = false,
+		animacionPuer = false;
 //For Keyboard
 float	movX = 0.0f,
 		movY = 0.0f,
@@ -62,7 +64,8 @@ float	base = 0.0f,
 		articulacion2 = 0.0f,
 		articulacionmon = 0.0f,
 		aire = 0.0f,
-		subir = 0.0f;
+		subir = 0.0f,
+		puerta = 0.0f;
 
 //Texture
 unsigned int	t_unam,
@@ -89,7 +92,7 @@ unsigned int	t_unam,
 int i, j, k;
 
 //Colores
-float	rojo = 1.0f,
+float	rojo = 0.0f,
 		verde = 1.0f,
 		azul = 1.0f;
 
@@ -484,6 +487,23 @@ void myData()
 
 void animate(void)
 {
+	//Animación de la puerta
+	if (animacionPuer) {
+		if (flag4) {
+			puerta += 0.005f;
+			if (puerta >= 2) {
+				animacionPuer = flag4 = false;
+			}
+		}
+		else {
+			puerta -= 0.005f;
+			if (puerta <= 0.0f) {
+				flag4 = true;
+				animacionPuer = false;
+			}
+		}
+	}
+
 	//Animación de las computadoras
 	if (animacionCom) {
 		if (flag1) {
@@ -499,23 +519,19 @@ void animate(void)
 			}
 		}
 	}
+	
 	//Animación del elevador
 	if (animacionEle){	
 		if(flag2) {
 			subir += 0.1f;
-			if (subir == 4.0f || subir == 8.0f || subir == 12.0f) {
-				animacionEle = false;
-			}
-			if (subir > 12.0f) {
-				flag2 = false;
+			if (subir >= 12.0f) {
+				flag2 = animacionEle = false;
 			}
 		}
 		else {
 			subir -= 0.1f;
-			if (subir == 0.0f || subir == 4.0f || subir == 8.0f) {
+			if (subir <= 0.0f) {
 				animacionEle = false;
-			}
-			if (subir < 0.0f) {
 				flag2 = true;
 			}
 		}
@@ -1458,8 +1474,16 @@ void display2(Shader projectionShader) {
 	projectionShader.setInt("texture1", t_plastico_b);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-	glBindVertexArray(0);
+	//-------------------------------------------------------Puerta corrediza--------------------------------------------------------------------------------------------
+	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(8.12f, 8.0f, -15.999f)); //parte de arriba
+	tmp = model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, -puerta)); //parte de arriba
+	model = glm::scale(model, glm::vec3(.02f, 4.0f, 2.0f));
+	projectionShader.setMat4("model", model);
+	projectionShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
+	projectionShader.setInt("texture1", t_mesa);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
+	glBindVertexArray(0);
 }
 //Termina la parte del dibujado de primitivas ------------------------------------------------------------------------------------------------------
 
@@ -1475,16 +1499,14 @@ void my_input(GLFWwindow *window)
 		camera.ProcessKeyboard(LEFT, (float)deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) //Animación Monitores
 		animacionCom = flag1 = true;
-	}
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-		animacionEle = flag2 = true;
-
-	}
-	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-		animacionAi = flag3 = true;
-	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) //Animación Elevador
+		animacionEle = true;
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) //Animación Aire acondicionado
+		animacionAi = true;
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) //Animación Puertas
+		animacionPuer = true;
 }
 //Termina el uso de las teclas ---------------------------------------------------------------------------------------------------------------------
 
